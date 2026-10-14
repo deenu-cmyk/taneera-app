@@ -1,1 +1,0 @@
-# taneera-app
