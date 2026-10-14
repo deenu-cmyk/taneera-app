@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taneera's — Admin Dashboard</title>
+<link rel="icon" type="image/png" href="assets/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#E42128; --primary-dark:#C81A20; --navy:#132A63; --royal:#1F4FBF;
+    --success:#22C55E; --warning:#F59E0B; --danger:#DC2626;
+    --bg:#F8FAFC; --surface:#FFFFFF; --border:#E5E7EB; --text:#111827; --text-2:#6B7280;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);line-height:1.5}
+  h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
+  img{max-width:100%;display:block}
+  a{text-decoration:none;color:inherit}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:10px;font-weight:600;font-size:14px;padding:11px 22px;cursor:pointer;transition:.15s}
+  .btn:active{transform:scale(.97)}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(228,33,40,.3)}
+  .btn-primary:hover{background:var(--primary-dark)}
+  .btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--border)}
+  .btn-outline:hover{border-color:var(--navy)}
+  .btn-danger-outline{background:#fff;color:var(--danger);border:1.5px solid #FCA5A5}
+  .btn-danger-outline:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .btn-sm{padding:8px 14px;font-size:12.5px}
+
+  /* ===== Loading screen (shown while auth check runs) ===== */
+  .auth-checking{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:var(--text-2);font-size:14px}
+  .spinner-ring{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ===== Shell layout ===== */
+  #adminRoot{display:none}
+  .shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+  @media(max-width:860px){.shell{grid-template-columns:1fr}.sidebar{position:relative}}
+
+  .sidebar{background:var(--navy);color:#fff;padding:24px 16px;display:flex;flex-direction:column;gap:4px}
+  .sidebar-logo{font-family:'Poppins',sans-serif;font-weight:800;font-size:19px;margin-bottom:4px;padding:0 10px}
+  .sidebar-logo span{color:#ff6b6f}
+  .sidebar-sub{font-size:11px;color:#B9C4E0;padding:0 10px;margin-bottom:22px}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.82);cursor:pointer}
+  .nav-link:hover{background:rgba(255,255,255,.06)}
+  .nav-link.active{background:var(--primary);color:#fff}
+  .sidebar-footer{margin-top:auto;padding:12px 10px 0;border-top:1px solid rgba(255,255,255,.12);font-size:11.5px;color:#B9C4E0}
+  .sidebar-footer .email{display:block;color:#fff;font-weight:600;margin:4px 0 10px;word-break:break-all;font-size:12px}
+
+  .main{padding:28px 28px 60px;max-width:1200px}
+
+  /* ===== KPI cards ===== */
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:30px}
+  @media(min-width:640px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:1024px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
+  .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px}
+  .kpi-card .num{font-family:'Poppins',sans-serif;font-weight:700;font-size:22px}
+  .kpi-card .label{font-size:11.5px;color:var(--text-2);margin-top:2px}
+
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .toolbar h2{font-size:21px}
+  .toolbar p{color:var(--text-2);font-size:13.5px;margin-top:3px}
+
+  /* ===== Tables ===== */
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow-x:auto;margin-bottom:40px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+  thead{background:#F1F4F9}
+  th{text-align:left;padding:12px 16px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-2);font-weight:700}
+  td{padding:12px 16px;border-top:1px solid var(--border);vertical-align:middle}
+  tr:hover td{background:#FAFBFD}
+  .row-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:var(--bg)}
+  .row-name{font-weight:600}
+  .row-desc{color:var(--text-2);font-size:12px;margin-top:2px}
+  .tag-pill{background:#EEF2FF;color:var(--royal);padding:1px 6px;border-radius:6px;font-weight:600}
+  .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+  .badge.in{background:#DCFCE7;color:#15803D}
+  .badge.out{background:#FEE2E2;color:#B91C1C}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap}
+  .empty-row td{text-align:center;color:var(--text-2);padding:40px 16px}
+  .status-select{border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12.5px;font-family:inherit}
+  .cproduct-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13.5px}
+  .cproduct-row input{width:auto}
+
+  /* ===== Add/Edit Product form (inline section, not a modal) ===== */
+  .form-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:640px}
+  .ap-field{margin-bottom:16px}
+  .ap-field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+  .ap-field input,.ap-field textarea,.ap-field select{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none}
+  .ap-field input:focus,.ap-field textarea:focus,.ap-field select:focus{border-color:var(--royal)}
+  .ap-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ap-upload{border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;cursor:pointer;position:relative}
+  .ap-upload:hover{border-color:var(--royal)}
+  .ap-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .ap-preview{width:160px;aspect-ratio:1/1;object-fit:cover;border-radius:10px;margin-bottom:10px;display:none}
+  .ap-preview.show{display:block}
+  .discount-pill{display:inline-block;background:#DCFCE7;color:#15803D;font-weight:700;font-size:12.5px;padding:4px 10px;border-radius:8px;margin-top:6px}
+
+  /* ===== Delete confirm modal ===== */
+  .overlay{position:fixed;inset:0;background:rgba(17,24,39,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s ease}
+  .overlay.open{opacity:1;pointer-events:auto}
+  .modal{background:#fff;border-radius:18px;max-width:380px;width:100%;padding:28px;text-align:center;transform:translateY(12px);transition:transform .2s ease}
+  .overlay.open .modal{transform:translateY(0)}
+  .modal h3{font-size:17px;margin-bottom:8px}
+  .modal p{color:var(--text-2);font-size:13.5px;margin-bottom:22px}
+  .confirm-actions{display:flex;gap:10px;justify-content:center}
+
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:10px;font-size:13.5px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:300;max-width:90vw;text-align:center}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ===== Invoice column + View Invoice modal ===== */
+  .invoice-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  .invoice-unavailable{font-size:12px;color:var(--text-2);font-style:italic}
+  .search-box{width:100%;max-width:340px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:13.5px;font-family:inherit;color:var(--text)}
+  .search-box:focus{outline:none;border-color:var(--primary)}
+  .invoice-modal-overlay{position:fixed;inset:0;background:rgba(17,24,39,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:400;opacity:0;pointer-events:none;transition:opacity .2s ease}
+  .invoice-modal-overlay.open{opacity:1;pointer-events:auto}
+  .invoice-modal{background:#F1F1EC;border-radius:14px;max-width:820px;width:100%;max-height:92vh;overflow:auto;position:relative}
+  .invoice-modal-actions{position:sticky;top:0;background:#F1F1EC;padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;z-index:2}
+  .invoice-modal-body{padding:18px}
+
+  /* ===== Print-only invoice container ===== */
+  #invoicePrintArea{display:none}
+  @media print{
+    body.printing-invoice > *:not(#invoicePrintArea){display:none !important}
+    body.printing-invoice #invoicePrintArea{display:block !important;position:static}
+    @page{size:A4;margin:14mm}
+  }
+</style>
+</head>
+<body>
+
+<!-- Shown briefly while Firebase confirms who's signed in -->
+<div class="auth-checking" id="authChecking">
+  <div class="spinner-ring"></div>
+  <p>Checking admin access…</p>
+</div>
+
+<!-- ===================== ADMIN DASHBOARD (hidden until auth confirms admin) ===================== -->
+<div id="adminRoot">
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><img src="assets/logo-icon.png" alt="Taneera's" style="height:30px;width:auto;vertical-align:middle;margin-right:6px">Taneera<span>'s</span></div>
+      <div class="sidebar-sub">Admin Panel</div>
+
+      <a class="nav-link active" data-section="dashboard">📊 Dashboard</a>
+      <a class="nav-link" data-section="products">📦 Products</a>
+      <a class="nav-link" data-section="add-product">➕ Add Product</a>
+      <a class="nav-link" data-section="coupons">🏷️ Coupon Codes</a>
+      <a class="nav-link" data-section="orders">🛍 Orders</a>
+      <a class="nav-link" data-section="invoices">🧾 Invoices</a>
+      <a class="nav-link" data-section="payments">💳 Payments</a>
+      <a class="nav-link" data-section="customers">👥 Customers</a>
+      <a class="nav-link" data-section="settings">⚙️ Settings</a>
+
+      <div class="sidebar-footer">
+        Signed in as
+        <span class="email" id="adminEmailLabel">—</span>
+        <a class="nav-link" style="padding:9px 10px" onclick="logout()">🚪 Logout</a>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <!-- ========== DASHBOARD ========== -->
+      <section class="dash-section" id="section-dashboard">
+        <div class="toolbar">
+          <div><h2>Dashboard</h2><p>Live overview of your marketplace</p></div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="num" id="kpiTotalProducts">0</div><div class="label">Total Products</div></div>
+          <div class="kpi-card"><div class="num" id="kpiActiveProducts">0</div><div class="label">Active Products</div></div>
+          <div class="kpi-card"><div class="num" id="kpiOutOfStock">0</div><div class="label">Out of Stock</div></div>
+          <div class="kpi-card"><div class="num" id="kpiTotalOrders">0</div><div class="label">Total Orders</div></div>
+          <div class="kpi-card"><div class="num" id="kpiTotalRevenue">₹0</div><div class="label">Total Revenue</div></div>
+          <div class="kpi-card"><div class="num" id="kpiTotalCustomers">0</div><div class="label">Total Customers</div></div>
+        </div>
+        <div class="form-card" style="max-width:none;color:var(--text-2);font-size:13.5px">
+          These numbers update live from Firestore — add a product or check back after an order comes in and this refreshes automatically, no reload needed.
+        </div>
+      </section>
+
+      <!-- ========== PRODUCTS ========== -->
+      <section class="dash-section" id="section-products" style="display:none">
+        <div class="toolbar">
+          <div><h2>Product Catalog</h2><p>Changes here update the customer marketplace immediately.</p></div>
+          <button class="btn btn-primary" onclick="openProductForm()">+ Add Product</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th>MRP</th><th>Price</th><th>Discount</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== ADD / EDIT PRODUCT ========== -->
+      <section class="dash-section" id="section-add-product" style="display:none">
+        <div class="toolbar"><div><h2 id="productFormTitle">Add a New Product</h2><p>Only you can create, edit, or price products.</p></div></div>
+
+        <form class="form-card" id="productForm">
+          <div class="ap-field">
+            <label>Product Photo</label>
+            <img class="ap-preview" id="pImagePreview" alt="Preview">
+            <label class="ap-upload">
+              <span id="pImageUploadLabel">📷 Click to upload an image</span>
+              <input type="file" accept="image/*" id="pImage">
+            </label>
+          </div>
+
+          <div class="ap-field"><label>Product Name *</label><input type="text" id="pName" placeholder="e.g. Handmade Wooden Lamp" required></div>
+          <div class="ap-field"><label>Category *</label><select id="pCategory" required></select></div>
+          <div class="ap-field"><label>Description</label><textarea id="pDescription" rows="3" placeholder="e.g. Warm ambient lighting, hand-carved base"></textarea></div>
+
+          <div class="ap-row">
+            <div class="ap-field"><label>MRP / Original Price (₹) *</label><input type="number" id="pMrp" min="0" step="1" required></div>
+            <div class="ap-field"><label>Selling Price (₹) *</label><input type="number" id="pSellingPrice" min="0" step="1" required></div>
+          </div>
+          <span class="discount-pill" id="pDiscountDisplay">0% OFF</span>
+
+          <div class="ap-row" style="margin-top:16px">
+            <div class="ap-field"><label>Stock Quantity</label><input type="number" id="pStock" min="0" step="1" value="0"></div>
+            <div class="ap-field"><label>Rating (0–5)</label><input type="number" id="pRating" min="0" max="5" step="0.1" value="5"></div>
+          </div>
+
+          <div class="ap-row">
+            <div class="ap-field">
+              <label>Status</label>
+              <select id="pStatus">
+                <option value="Active">Active</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+            </div>
+            <div class="ap-field">
+              <label>Tag</label>
+              <select id="pTag">
+                <option value="">None</option>
+                <option value="New">New</option>
+                <option value="Best Seller">Best Seller</option>
+                <option value="Offer">Offer</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ap-row">
+            <div class="ap-field"><label>Artisan / Seller Name</label><input type="text" id="pArtisan" placeholder="e.g. Ramesh Studio"></div>
+            <div class="ap-field"><label>SKU</label><input type="text" id="pSku" placeholder="Auto-generated"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" id="productSubmitBtn">Add Product</button>
+        </form>
+      </section>
+
+      <!-- ========== COUPON CODES ========== -->
+      <section class="dash-section" id="section-coupons" style="display:none">
+        <div class="toolbar">
+          <div><h2>Coupon Codes</h2><p>Only you can create, edit, or deactivate coupons.</p></div>
+          <button class="btn btn-primary" onclick="openCouponForm()">+ Add Coupon Code</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Coupon</th><th>Discount</th><th>Products</th><th>Status</th><th>Created</th><th></th></tr></thead>
+            <tbody id="couponTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== ADD / EDIT COUPON ========== -->
+      <section class="dash-section" id="section-add-coupon" style="display:none">
+        <div class="toolbar"><div><h2 id="couponFormTitle">Add a New Coupon</h2><p>Choose which products this code applies to.</p></div></div>
+
+        <form class="form-card" id="couponForm">
+          <div class="ap-field">
+            <label>Coupon Code *</label>
+            <input type="text" id="cCode" placeholder="e.g. TANEERA10" required style="text-transform:uppercase">
+          </div>
+
+          <div class="ap-field">
+            <label>Discount Percentage *</label>
+            <input type="number" id="cDiscount" min="1" max="100" step="1" placeholder="e.g. 10" required>
+          </div>
+
+          <div class="ap-field">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="cSelectAll" style="width:auto" onchange="toggleSelectAllProducts(this.checked)">
+              Applies to All Products
+            </label>
+          </div>
+
+          <div class="ap-field" id="cProductListWrap">
+            <label>Or select specific products</label>
+            <div id="cProductList" style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:10px 14px"></div>
+          </div>
+
+          <div class="ap-field">
+            <label>Status</label>
+            <select id="cStatus">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center" id="couponSubmitBtn">Save Coupon Code</button>
+            <button type="button" class="btn btn-outline" style="flex:1;justify-content:center" onclick="showSection('coupons')">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ========== ORDERS ========== -->
+      <section class="dash-section" id="section-orders" style="display:none">
+        <div class="toolbar"><div><h2>Orders</h2><p>Orders placed by customers on the storefront.</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>UTR / Ref No.</th><th>Status</th><th>Payment</th><th>Invoice</th><th>Date</th></tr></thead>
+            <tbody id="orderTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== INVOICES ========== -->
+      <section class="dash-section" id="section-invoices" style="display:none">
+        <div class="toolbar">
+          <div><h2>Invoices</h2><p>All paid invoices, in one place — search by invoice #, order #, or customer.</p></div>
+        </div>
+        <input type="text" class="search-box" id="invoiceSearchInput" placeholder="Search invoice #, order #, customer name or email…" oninput="filterInvoices(this.value)" style="margin-bottom:16px">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Invoice #</th><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Invoice Date</th><th></th></tr></thead>
+            <tbody id="invoiceTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== PAYMENTS ========== -->
+      <section class="dash-section" id="section-payments" style="display:none">
+        <div class="toolbar"><div><h2>Payments</h2><p>Revenue summary from placed orders.</p></div></div>
+        <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr)">
+          <div class="kpi-card"><div class="num" id="kpiTotalRevenue2">₹0</div><div class="label">Total Revenue</div></div>
+          <div class="kpi-card"><div class="num" id="kpiTotalOrders2">0</div><div class="label">Total Orders</div></div>
+        </div>
+        <div class="form-card" style="max-width:none;color:var(--text-2);font-size:13.5px">
+          Payments are collected manually via UPI/PhonePe — customers scan the QR at checkout and click "I've Paid," which creates the order with Payment Status: Pending. <strong style="color:var(--navy)">Check your actual PhonePe/UPI account for the matching payment before marking an order's Payment Status as Paid</strong> in the Orders tab — nothing here verifies payment automatically.
+        </div>
+      </section>
+
+      <!-- ========== CUSTOMERS ========== -->
+      <section class="dash-section" id="section-customers" style="display:none">
+        <div class="toolbar"><div><h2>Customers</h2><p>Everyone who has registered on the storefront.</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Joined</th></tr></thead>
+            <tbody id="customerTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== SETTINGS ========== -->
+      <section class="dash-section" id="section-settings" style="display:none">
+        <div class="toolbar"><div><h2>Settings</h2><p>Admin account details.</p></div></div>
+        <div class="form-card" style="max-width:none">
+          <p style="font-size:13.5px;color:var(--text-2);margin-bottom:6px">Admin email (fixed — not editable from any customer interface):</p>
+          <p style="font-weight:700;margin-bottom:20px" id="settingsEmailLabel">—</p>
+          <button class="btn btn-outline" onclick="logout()">Log out</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== DELETE CONFIRM MODAL ===================== -->
+<div class="overlay" id="delOverlay" onclick="if(event.target===this) closeDeleteConfirm()">
+  <div class="modal">
+    <h3>Delete "<span id="delProductName"></span>"?</h3>
+    <p>This removes it from the database and the storefront. This can't be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button>
+      <button class="btn" style="background:var(--danger);color:#fff" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="couponDelOverlay" onclick="if(event.target===this) closeCouponDeleteConfirm()">
+  <div class="modal">
+    <h3>Delete coupon "<span id="delCouponCode"></span>"?</h3>
+    <p>This removes it from Firestore and it will stop working immediately at checkout.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeCouponDeleteConfirm()">Cancel</button>
+      <button class="btn" style="background:var(--danger);color:#fff" onclick="confirmDeleteCoupon()">Delete Coupon</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VIEW INVOICE MODAL ===================== -->
+<div class="invoice-modal-overlay" id="invoiceModalOverlay" onclick="if(event.target===this) closeInvoiceModal()">
+  <div class="invoice-modal">
+    <div class="invoice-modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="downloadInvoiceFromModal()">⬇ Download PDF</button>
+      <button class="btn btn-outline btn-sm" onclick="printInvoiceFromModal()">🖨 Print</button>
+      <button class="btn btn-primary btn-sm" onclick="closeInvoiceModal()">Close</button>
+    </div>
+    <div class="invoice-modal-body" id="invoiceModalBody"></div>
+  </div>
+</div>
+
+<!-- Hidden container used only when printing an invoice (see @media print rules above) -->
+<div id="invoicePrintArea"></div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script type="module" src="admin.js"></script>
+<script>
+  // Hide the "checking access" spinner once admin.js's auth guard has run
+  // (it either shows #adminRoot or redirects away — either way, done).
+  const obs = new MutationObserver(() => {
+    if (document.getElementById('adminRoot').style.display === 'block') {
+      document.getElementById('authChecking').style.display = 'none';
+      document.getElementById('settingsEmailLabel').textContent = document.getElementById('adminEmailLabel').textContent;
+      obs.disconnect();
+    }
+  });
+  obs.observe(document.getElementById('adminRoot'), { attributes: true, attributeFilter: ['style'] });
+</script>
+</body>
+</html>
