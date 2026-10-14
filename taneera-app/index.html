@@ -1,0 +1,2144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taneera's — Discover Beautiful Handmade Creations</title>
+<link rel="icon" type="image/png" href="assets/favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#B08D57;
+    --primary-dark:#96754A;
+    --navy:#3F4A38;
+    --royal:#8B6F53;
+    --success:#5C6B52;
+    --warning:#B08D57;
+    --bg:#F8F3E9;
+    --surface:#FFFFFF;
+    --border:#E3D9C4;
+    --text:#3F4A38;
+    --text-2:#7A8571;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Jost',sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+  h1,h2,h3,h4,.heading{font-family:'Cormorant Garamond',serif;font-weight:600}
+  img{max-width:100%;display:block}
+  a{text-decoration:none;color:inherit}
+  ul{list-style:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 20px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:2px;font-family:'Jost',sans-serif;font-weight:500;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;padding:15px 30px;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease, background .2s ease}
+  .btn:active{transform:scale(0.97)}
+  .btn-primary{background:var(--navy);color:var(--bg);box-shadow:0 4px 14px rgba(63,74,56,.25)}
+  .btn-primary:hover{background:#2E3629;box-shadow:0 6px 20px rgba(63,74,56,.35)}
+  .btn-outline{background:transparent;color:#fff;border:1px solid #fff}
+  .btn-outline:hover{background:#fff;color:var(--navy)}
+  .btn-navy{background:var(--navy);color:var(--bg)}
+  .btn-navy:hover{background:#2E3629}
+  .section{padding:80px 0}
+  .section-head{text-align:center;max-width:600px;margin:0 auto 48px}
+  .eyebrow{color:var(--primary);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.22em;margin-bottom:12px;display:block}
+  .section-title{font-size:36px;font-weight:600;margin-bottom:10px;color:var(--navy)}
+  .section-sub{color:var(--text-2);font-size:15px}
+
+  /* ===== Header ===== */
+  header{position:sticky;top:0;z-index:100;background:rgba(248,243,233,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .nav-wrap{display:flex;align-items:center;gap:28px;height:86px}
+  .logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:28px;color:var(--navy);white-space:nowrap;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+  .logo-img{height:40px;width:auto;display:block}
+  .logo span{color:var(--primary)}
+  .search-box{flex:1;max-width:380px;display:none;border-bottom:1px solid var(--navy);overflow:hidden}
+  .search-box input{border:none;outline:none;padding:9px 4px;font-size:13.5px;width:100%;background:none;font-family:'Jost',sans-serif;color:var(--text)}
+  .search-box button{background:none;color:var(--navy);border:none;padding:0 8px;cursor:pointer;font-size:15px}
+  .nav-links{display:none;gap:32px;font-weight:500;font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--navy)}
+  .nav-links a{position:relative;padding:6px 0}
+  .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--primary);transition:.25s}
+  .nav-links a:hover::after{width:100%}
+  .nav-actions{display:flex;align-items:center;gap:18px;margin-left:auto}
+  .icon-btn{position:relative;font-size:18px;cursor:pointer;background:none;border:none;color:var(--navy)}
+  .count-badge{position:absolute;top:-8px;right:-10px;background:var(--primary);color:#fff;font-size:10px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+  /* ===== Account dropdown ===== */
+  .account-menu{position:relative}
+  .account-dropdown{position:absolute;top:calc(100% + 12px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:6px;box-shadow:0 14px 30px rgba(63,74,56,.18);min-width:170px;padding:6px;display:none;flex-direction:column;z-index:150}
+  .account-dropdown.open{display:flex;animation:pulseIn .15s ease both}
+  .account-dropdown button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;padding:10px 12px;font-size:13.5px;font-family:'Jost',sans-serif;color:var(--navy);cursor:pointer;border-radius:4px}
+  .account-dropdown button:hover{background:var(--bg)}
+  .menu-toggle{display:block;font-size:20px;background:none;border:none;cursor:pointer;margin-left:8px;color:var(--navy)}
+  @media(min-width:900px){
+    .search-box{display:flex}
+    .nav-links{display:flex}
+    .menu-toggle{display:none}
+  }
+  .mobile-panel{display:none;flex-direction:column;gap:14px;padding:16px 20px;border-top:1px solid var(--border)}
+  .mobile-panel.open{display:flex}
+
+  /* ===== Hero ===== */
+  .hero{position:relative;padding:64px 0 20px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:44px;align-items:center}
+  @media(min-width:960px){.hero-grid{grid-template-columns:1fr 1fr}}
+  .hero-copy{animation:fadeUp .8s ease both}
+  .hero h1{font-size:50px;font-weight:600;line-height:1.1;margin-bottom:18px;color:var(--navy)}
+  .hero p{font-size:16px;color:var(--text-2);margin-bottom:32px;max-width:440px}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-btns .btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+  .hero-btns .btn-outline:hover{background:var(--navy);color:var(--bg)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:640px){.hero h1{font-size:34px}}
+
+  .hero-visual{position:relative;height:420px}
+  .blob{position:absolute;overflow:hidden;box-shadow:0 20px 50px rgba(63,74,56,.15)}
+  .blob img{width:100%;height:100%;object-fit:cover}
+  .blob-1{width:260px;height:320px;border-radius:130px 130px 20px 130px;top:0;right:20px;z-index:2}
+  .blob-2{width:180px;height:180px;border-radius:50%;top:220px;right:250px;z-index:3;border:6px solid var(--bg)}
+  .blob-3{width:140px;height:180px;border-radius:20px 90px 90px 90px;top:50px;left:0;z-index:1}
+  @media(max-width:640px){
+    .hero-visual{height:340px}
+    .blob-1{width:190px;height:240px;right:0}
+    .blob-2{width:120px;height:120px;top:160px;right:140px}
+    .blob-3{width:100px;height:130px}
+  }
+
+  /* ===== Product strip ===== */
+  .strip{display:flex;gap:14px;overflow-x:auto;padding:48px 0 6px}
+  .strip::-webkit-scrollbar{height:6px}
+  .strip-card{flex:0 0 auto;width:170px;aspect-ratio:3/4;border-radius:4px;overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+  .strip-card img{width:100%;height:100%;object-fit:cover}
+  @media(min-width:960px){.strip{overflow:visible;justify-content:space-between}.strip-card{width:calc(20% - 12px)}}
+
+  /* ===== Categories ===== */
+  .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:560px;margin:0 auto}
+  @media(min-width:640px){.cat-grid{grid-template-columns:repeat(3,1fr);max-width:760px}}
+  .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:26px 14px;text-align:center;cursor:pointer;transition:.25s}
+  .cat-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(63,74,56,.1);border-color:var(--primary)}
+  .cat-card .cat-icon{font-size:30px;margin-bottom:10px}
+  .cat-card img{width:100%;height:90px;object-fit:cover;border-radius:4px;margin-bottom:12px}
+  .cat-card h4{font-family:'Jost',sans-serif;font-size:12.5px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--navy)}
+
+  /* ===== Products ===== */
+  .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  @media(min-width:640px){.product-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:1024px){.product-grid{grid-template-columns:repeat(4,1fr)}}
+  .p-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:.3s;display:flex;flex-direction:column}
+  .p-card:hover{box-shadow:0 16px 34px rgba(63,74,56,.12);transform:translateY(-4px)}
+  .p-img-wrap{position:relative;aspect-ratio:1/1.05;overflow:hidden;background:var(--bg)}
+  .p-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .p-card:hover .p-img-wrap img{transform:scale(1.06)}
+  .p-discount{position:absolute;top:12px;left:12px;background:var(--navy);color:var(--bg);font-size:10.5px;font-weight:600;letter-spacing:.03em;padding:4px 9px;border-radius:2px}
+  .p-wish{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(248,243,233,.92);border:none;cursor:pointer;font-size:15px;color:var(--navy);transition:.2s}
+  .p-wish:hover{background:var(--primary);color:#fff}
+  .p-wish.active{background:var(--primary);color:#fff}
+  .p-body{padding:20px;flex:1;display:flex;flex-direction:column}
+  .p-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;margin-bottom:5px;color:var(--navy)}
+  .p-desc{font-size:12.5px;color:var(--text-2);margin-bottom:8px}
+  .p-rating{font-size:12px;color:var(--primary);margin-bottom:10px}
+  .p-rating span.count{color:var(--text-2)}
+  .p-price{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+  .p-price .now{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:19px;color:var(--navy)}
+  .p-price .was{font-size:12.5px;color:var(--text-2);text-decoration:line-through}
+
+  /* ===== Coupon badge ===== */
+  .coupon-badge{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;background:#FBF3E7;border:1px dashed var(--primary);border-radius:4px;padding:8px 10px;margin-bottom:10px;font-size:11.5px;font-weight:600;color:var(--navy)}
+  .coupon-badge .coupon-code{color:var(--primary);font-weight:700}
+  .coupon-badge button{margin-left:auto;background:var(--navy);color:var(--bg);border:none;border-radius:3px;padding:5px 10px;font-size:10.5px;cursor:pointer;text-transform:uppercase;letter-spacing:.03em}
+  .coupon-badge button:hover{background:#2E3629}
+  .coupon-badge-lg{flex-direction:column;align-items:flex-start;font-size:13px;padding:14px 16px;gap:6px}
+  .coupon-badge-lg button{margin-left:0;margin-top:4px;padding:8px 16px;font-size:11px}
+  .p-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-bottom:14px}
+  .p-meta .stock.in{color:var(--success);font-weight:600}
+  .p-actions{display:flex;gap:8px;margin-top:auto}
+  .p-actions button{flex:1;font-size:11.5px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;border-radius:2px;padding:10px;cursor:pointer;border:1px solid var(--navy);background:#fff;color:var(--navy);transition:.2s}
+  .p-actions button:hover{background:var(--navy);color:var(--bg)}
+  .p-actions .buy{background:var(--navy);color:var(--bg);border-color:var(--navy)}
+  .p-actions .buy:hover{background:#2E3629}
+
+  /* ===== Offers ===== */
+  .offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media(min-width:768px){.offer-grid{grid-template-columns:repeat(4,1fr)}}
+  .offer-card{border-radius:4px;padding:28px 22px;color:var(--bg);position:relative;overflow:hidden;animation:pulseIn .6s ease both;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease;text-align:left;border:none;font-family:inherit;display:block;width:100%}
+  .offer-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(63,74,56,.2)}
+  .offer-card:focus-visible{outline:2px solid var(--bg);outline-offset:3px}
+  .offer-card:nth-child(1){background:linear-gradient(135deg,var(--navy),#5C6B52)}
+  .offer-card:nth-child(2){background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
+  .offer-card:nth-child(3){background:linear-gradient(135deg,var(--brown,#8B6F53),var(--primary))}
+  .offer-card:nth-child(4){background:linear-gradient(135deg,#5C6B52,var(--navy))}
+  .offer-card h4{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;margin-bottom:6px}
+  .offer-card p{font-size:12.5px;opacity:.88}
+  .offer-card .code{display:inline-block;margin-top:14px;background:rgba(248,243,233,.2);padding:6px 14px;border-radius:2px;font-weight:600;font-size:12px;letter-spacing:.05em}
+  @keyframes pulseIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+  /* ===== Why choose us ===== */
+  .why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;text-align:center}
+  @media(min-width:768px){.why-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:1024px){.why-grid{grid-template-columns:repeat(6,1fr)}}
+  .why-item .icon{font-size:28px;margin-bottom:10px}
+  .why-item h4{font-family:'Jost',sans-serif;font-size:12.5px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--navy)}
+
+  /* ===== Newsletter ===== */
+  .newsletter-section{background:var(--navy);color:var(--bg);text-align:center;padding:64px 0}
+  .newsletter-section h2{font-size:28px;margin-bottom:10px}
+  .newsletter-section p{opacity:.8;margin-bottom:28px;font-size:14px}
+  .newsletter-form{display:flex;max-width:420px;margin:0 auto;border-bottom:1px solid rgba(248,243,233,.4)}
+  .newsletter-form input{flex:1;border:none;background:none;padding:12px 6px;font-size:14px;outline:none;color:var(--bg);font-family:'Jost',sans-serif}
+  .newsletter-form input::placeholder{color:rgba(248,243,233,.6)}
+  .newsletter-form button{background:none;border:none;color:var(--primary);font-weight:600;padding:0 10px;cursor:pointer;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+  .newsletter-form button:hover{color:#D9C39A}
+
+  /* ===== Shipping Info ===== */
+  .shipping-section{background:#FFF9F2}
+  .ship-grid{display:grid;grid-template-columns:1fr;gap:20px}
+  @media(min-width:640px){.ship-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:960px){.ship-grid{grid-template-columns:repeat(4,1fr)}}
+  .ship-card{background:#fff;border-radius:14px;padding:26px 22px;box-shadow:0 6px 20px rgba(63,74,56,.08);text-align:center}
+  .ship-card .ship-icon{font-size:30px;margin-bottom:12px}
+  .ship-card h4{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:8px}
+  .ship-card p{font-size:13px;color:var(--text-2);line-height:1.55}
+
+  /* ===== Track Order ===== */
+  .track-card{background:#fff;border-radius:16px;padding:32px;max-width:720px;margin:0 auto;box-shadow:0 10px 30px rgba(63,74,56,.08)}
+  .track-form{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .track-form input{flex:1;min-width:200px;border:1px solid var(--border);border-radius:8px;padding:13px 14px;font-size:14px;font-family:'Jost',sans-serif;text-transform:uppercase}
+  .track-form input:focus{outline:none;border-color:var(--primary)}
+  .track-form button{white-space:nowrap}
+  @media(max-width:520px){.track-form{flex-direction:column}.track-form input, .track-form button{width:100%}}
+  .track-message{font-size:13.5px;margin-top:10px;font-weight:600}
+  .track-message.error{color:var(--primary)}
+  .track-message.info{color:var(--text-2)}
+
+  /* ===== Offer Detail View (hash-routed: #offer/...) ===== */
+  .back-to-home-btn{background:none;border:none;color:var(--navy);font-family:'Jost',sans-serif;font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;padding:8px 0;margin-bottom:28px}
+  .back-to-home-btn:hover{color:var(--primary)}
+  .offer-detail-icon{font-size:44px;margin-bottom:14px}
+  .offer-detail-title{font-size:32px;margin-bottom:14px;color:var(--navy)}
+  .offer-detail-desc{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:18px}
+  .offer-detail-note{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:18px}
+  .offer-detail-highlight{background:#FBF3E7;border:1px dashed var(--primary);border-radius:6px;padding:16px 18px;margin-bottom:20px;font-weight:600;color:var(--navy);font-size:14.5px}
+  .offer-coupon-box{background:var(--bg);border:1px dashed var(--primary);border-radius:6px;padding:18px;text-align:center;margin-bottom:16px}
+  .offer-coupon-box .lbl{font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .offer-coupon-box .code{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--navy);letter-spacing:.05em}
+  .offer-copy-msg{font-size:12.5px;color:var(--success);margin-top:8px;min-height:16px}
+
+  /* ===== FAQ ===== */
+  .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+  .faq-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .faq-item summary{padding:16px 20px;cursor:pointer;font-weight:600;color:var(--navy);font-size:14.5px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';font-size:18px;color:var(--primary);transition:transform .2s}
+  .faq-item[open] summary::after{transform:rotate(45deg)}
+  .faq-item p{padding:0 20px 18px;font-size:13.5px;color:var(--text-2);line-height:1.65;margin:0}
+
+  /* ===== Contact info block (inside #contact section) ===== */
+  .contact-info-row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;font-size:14px}
+  .contact-info-row a{display:flex;align-items:center;gap:8px;color:var(--bg);opacity:.9}
+  .contact-info-row a:hover{opacity:1;text-decoration:underline}
+
+  /* ===== Footer contact line ===== */
+  .footer-contact{display:flex;flex-direction:column;gap:6px;margin:14px 0;font-size:13px}
+  .footer-contact a{opacity:.85}
+  .footer-contact a:hover{opacity:1;color:var(--bg)}
+
+  .track-result{margin-top:28px;border-top:1px solid var(--border);padding-top:26px}
+  .timeline{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;margin-bottom:30px}
+  .timeline-step{flex:1;min-width:88px;text-align:center;position:relative}
+  .timeline-step .dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:15px;font-weight:700;background:#EFE6D8;color:var(--text-2);border:2px solid var(--border)}
+  .timeline-step.done .dot{background:var(--success);border-color:var(--success);color:#fff}
+  .timeline-step.current .dot{background:var(--primary);border-color:var(--primary);color:#fff;animation:pulseIn 1s ease infinite alternate}
+  .timeline-step .label{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:.02em}
+  .timeline-step .step-time{font-size:9.5px;color:var(--text-2);margin-top:2px;line-height:1.3}
+  .timeline-step.done .step-time, .timeline-step.current .step-time{color:var(--navy)}
+  .timeline-step.done .label, .timeline-step.current .label{color:var(--navy)}
+  .timeline-cancelled{background:#FEE2E2;color:#B91C1C;border-radius:10px;padding:16px 18px;font-weight:600;font-size:14px;margin-bottom:24px;text-align:center}
+
+  .order-info-card{background:var(--bg);border-radius:12px;padding:20px 22px;font-size:13.5px}
+  .order-info-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+  .order-info-row:last-child{border-bottom:none}
+  .order-info-row .k{color:var(--text-2);font-weight:500}
+  .order-info-row .v{color:var(--navy);font-weight:600;text-align:right}
+  .order-info-items{margin-top:4px}
+  .order-info-items div{margin-bottom:3px}
+
+  /* ===== Footer ===== */
+  footer{background:#2E3629;color:rgba(248,243,233,.75);padding:60px 0 20px}
+  .footer-grid{display:grid;grid-template-columns:1fr;gap:32px}
+  @media(min-width:768px){.footer-grid{grid-template-columns:2fr 1fr 1fr 1fr}}
+  .footer-grid h4{color:var(--bg);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;margin-bottom:16px}
+  .footer-grid ul li{margin-bottom:10px;font-size:13px}
+  .footer-grid ul li a:hover{color:var(--bg)}
+  .footer-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:22px;color:var(--bg);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .footer-logo-img{height:32px;width:auto}
+  .footer-logo span{color:var(--primary)}
+  .social-row{display:flex;gap:10px;margin-top:16px}
+  .social-row a{width:34px;height:34px;border-radius:50%;border:1px solid rgba(248,243,233,.25);display:flex;align-items:center;justify-content:center;font-size:13px}
+  .social-row a:hover{background:var(--primary);border-color:var(--primary)}
+  .footer-bottom{text-align:center;font-size:11.5px;opacity:.5;margin-top:44px;border-top:1px solid rgba(248,243,233,.1);padding-top:20px;letter-spacing:.02em}
+
+  /* ===== Toast ===== */
+  #toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--bg);padding:12px 20px;border-radius:2px;font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.2);opacity:0;transform:translateY(10px);transition:.25s;z-index:200;letter-spacing:.02em}
+  #toast.show{opacity:1;transform:translateY(0)}
+
+  /* fade-in on scroll */
+  .fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease}
+  .fade-in.visible{opacity:1;transform:translateY(0)}
+
+  /* ===== Quick View Modal ===== */
+  .qv-overlay{position:fixed;inset:0;background:rgba(63,74,56,.55);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+  .qv-overlay.open{display:flex}
+  .qv-modal{background:var(--bg);border-radius:6px;max-width:760px;width:100%;max-height:88vh;overflow:auto;display:grid;grid-template-columns:1fr;position:relative;animation:pulseIn .25s ease both}
+  @media(min-width:700px){.qv-modal{grid-template-columns:1fr 1fr}}
+  .qv-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(63,74,56,.08);border:none;font-size:16px;cursor:pointer;z-index:2;color:var(--navy)}
+  .qv-close:hover{background:rgba(63,74,56,.15)}
+  .qv-img{aspect-ratio:1/1;background:var(--bg);overflow:hidden}
+  .qv-img img{width:100%;height:100%;object-fit:cover}
+  .qv-info{padding:28px 28px 32px;display:flex;flex-direction:column}
+  .qv-info .p-name{font-size:22px;margin-bottom:6px}
+  .qv-info .p-desc{font-size:14px;margin-bottom:12px}
+  .qv-info .p-rating{font-size:13px;margin-bottom:14px}
+  .qv-info .p-price .now{font-size:26px}
+  .qv-info .p-price .was{font-size:14px}
+  .qv-info .p-meta{margin-bottom:20px}
+
+  /* ===== Invoice ===== */
+  .invoice-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .invoice-modal-actions{position:sticky;top:0;background:var(--bg);padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;z-index:2}
+  .invoice-modal-body{padding:4px 18px 24px}
+
+  /* ===== Print-only invoice container ===== */
+  #invoicePrintArea{display:none}
+  @media print{
+    body.printing-invoice > *:not(#invoicePrintArea){display:none !important}
+    body.printing-invoice #invoicePrintArea{display:block !important;position:static}
+    @page{size:A4;margin:14mm}
+  }
+  .qv-info .p-actions{margin-top:0}
+
+  /* ===== Add Product Modal (legacy styles, harmless if unused) ===== */
+  .section-head-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:48px}
+  .section-head-row .section-head{margin:0;text-align:left;max-width:none}
+  .add-product-btn{white-space:nowrap}
+  .ap-form{padding:26px}
+  .ap-form h3{font-size:19px;margin-bottom:18px}
+  .ap-field{margin-bottom:14px}
+  .ap-field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+  .ap-field input,.ap-field textarea{width:100%;border:1px solid var(--border);border-radius:4px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none}
+  .ap-field input:focus,.ap-field textarea:focus{border-color:var(--primary)}
+  .ap-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ap-upload{border:2px dashed var(--border);border-radius:4px;padding:18px;text-align:center;cursor:pointer;position:relative}
+  .ap-upload:hover{border-color:var(--primary)}
+  .ap-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .ap-preview{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;margin-bottom:10px;display:none}
+  .ap-preview.show{display:block}
+  .ap-check{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-bottom:16px}
+  .ap-check input{width:auto}
+  .logged-badge{font-size:11px;font-weight:700;position:absolute;top:-4px;right:-6px;background:var(--success);color:#fff;width:10px;height:10px;border-radius:50%;border:2px solid var(--surface)}
+  .settings-label{font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--text-2);margin-bottom:5px;display:block}
+  .settings-value{font-size:14.5px;color:var(--navy);font-weight:600;word-break:break-word;white-space:pre-line}
+  .settings-input{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:inherit;font-size:14px;box-sizing:border-box}
+  .settings-input:disabled{opacity:.6;cursor:not-allowed;background:var(--bg)}
+
+  /* ===== Cart / Wishlist / Orders mini rows ===== */
+  .mini-row{display:flex;gap:12px;align-items:center;border:1px solid var(--border);border-radius:4px;padding:10px}
+  .mini-row img{width:52px;height:52px;border-radius:4px;object-fit:cover;flex-shrink:0}
+  .mini-row .info{flex:1;min-width:0}
+  .mini-row .info .name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--navy)}
+  .mini-row .info .price{font-size:12.5px;color:var(--text-2)}
+  .mini-qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:4px}
+  .mini-qty button{background:none;border:none;padding:4px 9px;cursor:pointer;font-size:14px;color:var(--navy)}
+  .mini-qty span{padding:0 6px;font-size:13px}
+  .mini-remove{background:none;border:none;color:var(--primary);cursor:pointer;font-size:13px}
+  .p-actions button:disabled, .p-actions a.disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
+  .order-card{border:1px solid var(--border);border-radius:4px;padding:14px}
+  .order-card .oc-top{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-2);margin-bottom:6px}
+  .order-card .oc-status{font-weight:600;padding:2px 9px;border-radius:20px;font-size:11px;background:#EFE6D8;color:var(--navy)}
+  .order-card .oc-items{font-size:13px;margin-bottom:4px}
+  .order-card .oc-total{font-weight:700;color:var(--navy)}</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <div class="container nav-wrap">
+    <a href="#home" class="logo"><img src="assets/logo-icon.png" alt="Taneera's" class="logo-img">Taneera<span>'s</span></a>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search handmade jewelry, decor, gifts...">
+      <button onclick="runSearch()">🔍</button>
+    </div>
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#offers" onclick="return handleOffersNavClick(event)">Offers</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="account-menu" id="accountMenu">
+        <button class="icon-btn" id="loginBtn" style="position:relative">👤<span class="logged-badge" id="loginBadge" style="display:none"></span></button>
+        <div class="account-dropdown" id="accountDropdown">
+          <button type="button" onclick="closeAccountDropdown(); openOrdersModal();">📦 My Orders</button>
+          <button type="button" onclick="closeAccountDropdown(); openSettingsModal();">⚙️ Settings</button>
+          <button type="button" onclick="closeAccountDropdown(); requestLogout();">🚪 Logout</button>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="openWishlistModal()">♡<span class="count-badge" id="wishBadge">0</span></button>
+      <button class="icon-btn" onclick="openOrdersModal()" title="My Orders">📦</button>
+      <button class="icon-btn" onclick="openCartModal()">🛒<span class="count-badge" id="cartBadge">0</span></button>
+      <button class="menu-toggle" onclick="document.getElementById('mobilePanel').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <div class="search-box" style="display:flex">
+      <input type="text" placeholder="Search products..." id="searchInputMobile">
+      <button onclick="runSearch(true)">🔍</button>
+    </div>
+    <a href="#home">Home</a>
+    <a href="#categories">Categories</a>
+    <a href="#offers" onclick="return handleOffersNavClick(event)">Offers</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="#" onclick="event.preventDefault(); openOrdersModal()">My Orders</a>
+    <a href="#" onclick="event.preventDefault(); openSettingsModal()">⚙️ Settings</a>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div class="hero-copy fade-in">
+      <span class="eyebrow">Taneera's · Handcrafted Since Day One</span>
+      <h1>Handmade,<br>Made With Love</h1>
+      <p>Unique handcrafted jewelry and décor designed with love, creativity, and carefully selected materials to make every moment special.</p>
+      <div class="hero-btns">
+        <a href="#products" class="btn btn-primary">Shop Now</a>
+        <a href="#contact" class="btn btn-outline">Consultation</a>
+      </div>
+    </div>
+    <div class="hero-visual fade-in">
+      <div class="blob blob-1"><img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=600&q=80" alt="Handmade jewelry"></div>
+      <div class="blob blob-2"><img src="https://images.unsplash.com/photo-1620656798579-1984d9e87df7?w=500&q=80" alt="Beaded earrings"></div>
+      <div class="blob blob-3"><img src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=500&q=80" alt="Pearl necklace"></div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="strip" id="stripRow"></div>
+  </div>
+</section>
+
+<!-- ===================== CATEGORIES ===================== -->
+<section class="section" id="categories">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Browse</span>
+      <h2 class="section-title">Shop by Category</h2>
+      <p class="section-sub">Explore handcrafted treasures across every category</p>
+    </div>
+    <div class="cat-grid" id="categoryGrid"></div>
+  </div>
+</section>
+
+<!-- ===================== PRODUCTS ===================== -->
+<section class="section" id="products" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-head-row fade-in">
+      <div class="section-head">
+        <span class="eyebrow">Bestsellers</span>
+        <h2 class="section-title">Handpicked Handmade Products</h2>
+        <p class="section-sub">Each piece is made with care by independent artisans</p>
+      </div>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- ===================== LIMITED OFFERS ===================== -->
+<section class="section" id="offers">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Don't miss out</span>
+      <h2 class="section-title">Today's Special Offers</h2>
+    </div>
+    <div class="offer-grid">
+      <button type="button" class="offer-card" onclick="goToOffer('buy2get1')" aria-label="Buy 2 Get 1 Free — view offer details">
+        <h4>🎁 Buy 2 Get 1 Free</h4>
+        <p>On all handmade jewelry &amp; accessories</p>
+      </button>
+      <button type="button" class="offer-card" onclick="goToOffer('free-shipping')" aria-label="Free Shipping — view offer details">
+        <h4>🚚 Free Shipping</h4>
+        <p>On all orders above ₹999</p>
+      </button>
+      <button type="button" class="offer-card" onclick="goToOffer('extra10')" aria-label="Extra 10% Off — view offer details and coupon code">
+        <h4>💸 Extra 10% Off</h4>
+        <p>On your first order with us</p>
+        <span class="code">Code: HANDMADE10</span>
+      </button>
+      <button type="button" class="offer-card" onclick="goToOffer('member-rewards')" aria-label="Member Rewards — view details">
+        <h4>⭐ Member Rewards</h4>
+        <p>Earn points on every purchase</p>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY CHOOSE US ===================== -->
+<section class="section" id="about" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">About Taneera's</span>
+      <h2 class="section-title">Crafted by Hand, Made with Intention</h2>
+      <p class="section-sub">Taneera's creates handcrafted jewelry and décor with close attention to detail and individuality — every piece chosen and assembled with care, nothing mass-produced.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-item"><div class="icon">🧵</div><h4>100% Handmade</h4></div>
+      <div class="why-item"><div class="icon">💎</div><h4>Premium Quality</h4></div>
+      <div class="why-item"><div class="icon">🔒</div><h4>Secure Payments</h4></div>
+      <div class="why-item"><div class="icon">🚀</div><h4>Fast Delivery</h4></div>
+      <div class="why-item"><div class="icon">🤝</div><h4>Trusted by Customers</h4></div>
+      <div class="why-item"><div class="icon">💬</div><h4>24/7 Support</h4></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NEWSLETTER / CONTACT ===================== -->
+<section class="newsletter-section" id="contact">
+  <div class="container">
+    <h2>Get in Touch</h2>
+    <p>Have a question about your order or a product? Reach us directly.</p>
+    <div class="contact-info-row">
+      <a href="tel:9538162560">📞 9538162560</a>
+      <a href="mailto:Tanirascollection@gmail.com">✉️ Tanirascollection@gmail.com</a>
+      <a href="https://www.instagram.com/tanee.raa?utm_source=qr" target="_blank" rel="noopener">📷 @tanee.raa</a>
+    </div>
+    <h2 style="font-size:22px">Join Our Newsletter</h2>
+    <p>Get updates on new arrivals, exclusive offers, and artisan stories.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Subscribed! Thank you.'); this.reset();">
+      <input type="email" placeholder="Enter your email" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<!-- ===================== SHIPPING INFORMATION ===================== -->
+<section class="section shipping-section" id="shipping">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Good to Know</span>
+      <h2 class="section-title">Shipping Information</h2>
+      <p class="section-sub">We carefully pack every handmade product and ship it safely from our artisan partners to your doorstep.</p>
+    </div>
+    <div class="ship-grid">
+      <div class="ship-card fade-in"><div class="ship-icon">📦</div><h4>Processing Time</h4><p>Orders are usually processed within 1–3 business days.</p></div>
+      <div class="ship-card fade-in"><div class="ship-icon">🚚</div><h4>Delivery Time</h4><p>Delivery generally takes 3–7 business days depending on location.</p></div>
+      <div class="ship-card fade-in"><div class="ship-icon">📍</div><h4>Delivery Areas</h4><p>We currently deliver across India.</p></div>
+      <div class="ship-card fade-in"><div class="ship-icon">📞</div><h4>Need Help?</h4><p>Contact our support team if your order is delayed.<br><a href="tel:9538162560" style="color:var(--navy);font-weight:600">9538162560</a><br><a href="mailto:Tanirascollection@gmail.com" style="color:var(--navy);font-weight:600;word-break:break-all">Tanirascollection@gmail.com</a></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TRACK ORDER ===================== -->
+<section class="section" id="track-order" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Where's My Order</span>
+      <h2 class="section-title">Track Your Order</h2>
+      <p class="section-sub">Enter your order number to check your order status.</p>
+    </div>
+    <div class="track-card fade-in">
+      <div class="track-form">
+        <input type="text" id="trackOrderInput" placeholder="Enter Order ID (e.g. TAN-10025)">
+        <button class="btn btn-primary" onclick="trackOrder()">Track Order</button>
+      </div>
+      <p class="track-message" id="trackMessage"></p>
+      <div class="track-result" id="trackResult" style="display:none"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="section" id="faq" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Questions</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list fade-in">
+      <details class="faq-item">
+        <summary>Can I cancel or get a refund on my order?</summary>
+        <p>No — Taneera's follows a strict No Refund Policy. Once payment is confirmed, the order is final, so please double-check your order details before completing payment. See our <a href="refund-policy.html" style="color:var(--primary)">Refund Policy</a> for details.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I exchange a product after delivery?</summary>
+        <p>Products cannot normally be exchanged after delivery. If you received a damaged or incorrect item, please contact our support team and we'll review your case.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How long does delivery take?</summary>
+        <p>Orders are usually processed within 1–3 business days, with delivery generally taking 3–7 business days depending on your location. See <a href="#shipping" style="color:var(--primary)">Shipping Information</a> for more.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How do I track my order?</summary>
+        <p>Head to the <a href="#track-order" style="color:var(--primary)">Track Your Order</a> section and enter your Order ID (e.g. TAN-10025), or check the Orders icon in the header if you're logged in.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What payment methods do you accept?</summary>
+        <p>We accept UPI / Online Payment at checkout.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How can I contact support?</summary>
+        <p>Call us at <a href="tel:9538162560" style="color:var(--primary)">9538162560</a>, email <a href="mailto:Tanirascollection@gmail.com" style="color:var(--primary)">Tanirascollection@gmail.com</a>, or message us on <a href="https://www.instagram.com/tanee.raa?utm_source=qr" target="_blank" rel="noopener" style="color:var(--primary)">Instagram</a>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div>
+      <div class="footer-logo"><img src="assets/logo-icon.png" alt="Taneera's" class="footer-logo-img">Taneera<span>'s</span></div>
+      <p style="font-size:13.5px;max-width:300px">A marketplace connecting independent artisans with people who love handmade, one-of-a-kind products.</p>
+      <div class="footer-contact">
+        <a href="tel:9538162560">📞 9538162560</a>
+        <a href="mailto:Tanirascollection@gmail.com">✉️ Tanirascollection@gmail.com</a>
+      </div>
+      <div class="social-row">
+        <a href="#">𝕏</a>
+        <a href="#">f</a>
+        <a href="https://www.instagram.com/tanee.raa?utm_source=qr" target="_blank" rel="noopener" title="Instagram">📷</a>
+        <a href="#">▶</a>
+      </div>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li><li><a href="#">Blog</a></li></ul>
+    </div>
+    <div>
+      <h4>Policies</h4>
+      <ul><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li><li><a href="refund-policy.html">Refund Policy</a></li></ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul><li><a href="#faq">FAQ</a></li><li><a href="#shipping">Shipping Info</a></li><li><a href="#track-order">Track Order</a></li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Taneera's. All rights reserved. · <a href="admin.html" style="color:inherit;opacity:.8">Admin</a></div>
+</footer>
+
+<!-- ===================== QUICK VIEW MODAL ===================== -->
+<div class="qv-overlay" id="qvOverlay" onclick="if(event.target===this) closeQuickView()">
+  <div class="qv-modal">
+    <button class="qv-close" onclick="closeQuickView()">✕</button>
+    <div class="qv-img"><img id="qvImg" src="" alt=""></div>
+    <div class="qv-info" id="qvInfo"></div>
+  </div>
+</div>
+
+<!-- ===================== CART MODAL ===================== -->
+<div class="qv-overlay" id="cartOverlay" onclick="if(event.target===this) closeCartModal()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:480px">
+    <button class="qv-close" onclick="closeCartModal()">✕</button>
+    <div class="qv-info" style="padding:28px">
+      <div class="p-name" style="margin-bottom:16px">Your Cart</div>
+      <div id="cartItemsList" style="display:flex;flex-direction:column;gap:12px;max-height:340px;overflow-y:auto"></div>
+      <div id="cartSummary" style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DELIVERY ADDRESS + PAYMENT MODAL ===================== -->
+<div class="qv-overlay" id="addressOverlay" onclick="if(event.target===this) closeAddressModal()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:460px">
+    <button class="qv-close" onclick="closeAddressModal()">✕</button>
+    <div class="qv-info" style="padding:28px">
+      <div class="p-name" style="margin-bottom:6px">Delivery Address</div>
+      <p style="color:var(--text-2);font-size:13px;margin-bottom:14px">Where should we deliver this order?</p>
+      <textarea id="deliveryAddressInput" rows="4" placeholder="House no, street, area, city, state, PIN code" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:inherit;font-size:14px;resize:vertical;box-sizing:border-box"></textarea>
+      <p id="addressError" style="color:var(--primary);font-size:12.5px;margin-top:6px;display:none"></p>
+
+      <div style="margin-top:14px">
+        <label for="phoneInput" style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px">Mobile Number</label>
+        <input type="tel" id="phoneInput" placeholder="10-digit mobile number" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;font-family:inherit;box-sizing:border-box">
+        <p id="phoneError" style="color:var(--primary);font-size:12.5px;margin-top:6px;display:none"></p>
+      </div>
+
+      <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border)">
+        <div style="font-size:12.5px;font-weight:700;letter-spacing:.03em;color:var(--text-2);text-transform:uppercase;margin-bottom:10px">Payment Method</div>
+        <div style="border:1.5px solid var(--primary);background:rgba(228,33,40,.04);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-weight:700;font-size:15px;color:#5F259F;margin-bottom:2px">💜 PhonePe</div>
+          <div style="font-size:10.5px;color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Accepted Here — scan any QR using PhonePe app</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px;display:inline-block;width:100%;max-width:220px;box-sizing:border-box">
+            <img src="assets/phonepe-qr.jpeg" alt="PhonePe payment QR code" style="width:100%;aspect-ratio:1/1;object-fit:contain;display:block"
+                 onerror="this.replaceWith(Object.assign(document.createElement('div'), {innerHTML:'⚠️ QR image not uploaded yet<br><span style=&quot;font-size:11px;font-weight:400&quot;>Add assets/phonepe-qr.jpeg to the project</span>', style:'width:100%;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:600;color:var(--primary);padding:10px;box-sizing:border-box'}))">
+          </div>
+          <p style="font-size:11.5px;color:var(--text-2);margin-top:10px">You can also pay using any supported UPI app.</p>
+
+          <div style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:12.5px;color:var(--text-2)">UPI ID: <strong style="color:var(--navy)">9538162560@ybl</strong></span>
+            <button type="button" id="copyUpiBtn" onclick="copyUpiId()" class="btn btn-outline" style="padding:6px 14px;font-size:10.5px;color:var(--navy);border-color:var(--navy)">Copy UPI ID</button>
+          </div>
+
+          <div style="text-align:left;margin-top:16px;padding-top:14px;border-top:1px dashed var(--border)">
+            <div style="font-size:11.5px;font-weight:700;color:var(--navy);margin-bottom:6px">How to Pay</div>
+            <ol style="margin:0 0 0 18px;padding:0;font-size:11.5px;color:var(--text-2);line-height:1.8">
+              <li>Open PhonePe or any UPI app.</li>
+              <li>Scan the QR code above.</li>
+              <li>Pay the exact order amount shown below.</li>
+              <li>After completing payment, return to this website.</li>
+              <li>Click "I've Paid — Place Order" below.</li>
+            </ol>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:13.5px">
+          <span style="color:var(--text-2)">Amount to Pay</span>
+          <span id="addressOrderTotal" style="font-weight:700;font-size:19px;color:var(--navy)">₹0</span>
+        </div>
+
+        <div style="margin-top:16px">
+          <label for="utrInput" style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px">UPI Transaction / UTR Number</label>
+          <input type="text" id="utrInput" placeholder="Enter your UTR / transaction reference number" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;font-family:inherit;box-sizing:border-box">
+          <p id="utrError" style="color:var(--primary);font-size:12.5px;margin-top:6px;display:none"></p>
+        </div>
+      </div>
+
+      <button id="confirmAddressBtn" class="btn-primary" style="width:100%;border:none;border-radius:10px;padding:13px;font-weight:700;font-size:15px;cursor:pointer;color:#fff;background:var(--primary);margin-top:16px" onclick="confirmDeliveryAddress()">I've Paid — Place Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ORDER CONFIRMED PAGE ===================== -->
+<div class="qv-overlay" id="orderConfirmedOverlay">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:480px">
+    <button class="qv-close" onclick="closeOrderConfirmed()">✕</button>
+    <div class="qv-info" style="padding:28px;text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:#DCFCE7;color:var(--success);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">✓</div>
+      <div class="p-name" style="font-size:20px">Order Placed Successfully</div>
+      <div style="color:var(--text-2);font-size:13px;margin-top:6px">Your payment will be verified by our team.</div>
+
+      <div style="text-align:left;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);font-size:13.5px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-2)">Order ID</span><span style="font-weight:700" id="ocOrderId"></span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span style="color:var(--text-2)">Order Date</span><span style="font-weight:600" id="ocOrderDate"></span></div>
+
+        <div style="color:var(--text-2);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px">Products</div>
+        <div id="ocProductsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px"></div>
+
+        <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);font-size:15px;margin-bottom:14px"><span style="font-weight:700">Total</span><span style="font-weight:700;color:var(--primary)" id="ocTotal"></span></div>
+
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--text-2)">Payment Method</span><span style="font-weight:600">UPI / PhonePe</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--text-2)">Payment Status</span><span style="font-weight:700;color:var(--warning)">Pending Verification</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--text-2)">Order Status</span><span style="font-weight:600">Placed</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">UTR / Reference No.</span><span style="font-weight:600" id="ocUtr"></span></div>
+      </div>
+
+      <button class="btn-primary" style="width:100%;border:none;border-radius:10px;padding:12px;font-weight:600;cursor:pointer;color:#fff;background:var(--primary);margin-top:20px" onclick="closeOrderConfirmed()">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WISHLIST MODAL ===================== -->
+<div class="qv-overlay" id="wishlistOverlay" onclick="if(event.target===this) closeWishlistModal()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:480px">
+    <button class="qv-close" onclick="closeWishlistModal()">✕</button>
+    <div class="qv-info" style="padding:28px">
+      <div class="p-name" style="margin-bottom:16px">Your Wishlist</div>
+      <div id="wishlistItemsList" style="display:flex;flex-direction:column;gap:12px;max-height:420px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== OFFER DETAIL VIEW (hash-routed: #offer/...) ===================== -->
+<div id="offerDetailView" style="display:none">
+  <div class="container" style="padding-top:40px;padding-bottom:60px;max-width:640px">
+    <button type="button" class="back-to-home-btn" onclick="navigateBack()">← Back</button>
+    <div id="offerDetailContent"></div>
+  </div>
+</div>
+
+<!-- ===================== MY ORDERS MODAL ===================== -->
+<div class="qv-overlay" id="ordersOverlay" onclick="if(event.target===this) closeOrdersModal()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:560px">
+    <button class="qv-close" onclick="closeOrdersModal()">✕</button>
+    <div class="qv-info" style="padding:28px">
+      <div class="p-name" style="margin-bottom:16px">My Orders</div>
+      <div id="ordersItemsList" style="display:flex;flex-direction:column;gap:14px;max-height:460px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VIEW INVOICE MODAL ===================== -->
+<div class="qv-overlay" id="invoiceModalOverlay" onclick="if(event.target===this) closeInvoiceModal()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:820px">
+    <button class="qv-close" onclick="closeInvoiceModal()">✕</button>
+    <div>
+      <div class="invoice-modal-actions">
+        <button class="btn btn-outline" style="padding:9px 16px;color:var(--navy);border-color:var(--navy)" onclick="downloadInvoiceFromModal()">Download PDF</button>
+        <button class="btn btn-outline" style="padding:9px 16px;color:var(--navy);border-color:var(--navy)" onclick="printInvoiceFromModal()">Print</button>
+      </div>
+      <div class="invoice-modal-body" id="invoiceModalBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden container used only when printing an invoice (see @media print rules above) -->
+<div id="invoicePrintArea"></div>
+
+<!-- ===================== SETTINGS MODAL ===================== -->
+<div class="qv-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettingsModal()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:520px">
+    <button class="qv-close" onclick="closeSettingsModal()">✕</button>
+    <div class="qv-info" style="padding:28px">
+      <div class="p-name" style="margin-bottom:4px">⚙️ Settings</div>
+      <p style="font-size:13px;color:var(--text-2);margin:0 0 22px">Manage your account details.</p>
+
+      <div style="font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);margin-bottom:14px">👤 My Profile</div>
+
+      <!-- VIEW MODE -->
+      <div id="profileViewMode" style="display:flex;flex-direction:column;gap:16px">
+        <div>
+          <span class="settings-label">Name</span>
+          <div class="settings-value" id="profileName">—</div>
+        </div>
+        <div>
+          <span class="settings-label">Email</span>
+          <div class="settings-value" id="profileEmail">—</div>
+        </div>
+        <div>
+          <span class="settings-label">Mobile</span>
+          <div class="settings-value" id="profileMobile">—</div>
+        </div>
+        <div>
+          <span class="settings-label">Address</span>
+          <div class="settings-value" id="profileAddress">—</div>
+        </div>
+        <button type="button" class="btn-primary" style="border:none;border-radius:8px;padding:11px 20px;font-weight:700;font-size:13.5px;cursor:pointer;align-self:flex-start" onclick="enterProfileEditMode()">✎ Edit Profile</button>
+      </div>
+
+      <!-- EDIT MODE -->
+      <div id="profileEditMode" style="display:none;flex-direction:column;gap:16px">
+        <div>
+          <label class="settings-label" for="editNameInput">Name</label>
+          <input type="text" id="editNameInput" class="settings-input" placeholder="Your full name">
+        </div>
+        <div>
+          <label class="settings-label" for="editEmailInput">Email</label>
+          <input type="text" id="editEmailInput" class="settings-input" disabled>
+        </div>
+        <div>
+          <label class="settings-label" for="editMobileInput">Mobile</label>
+          <input type="tel" id="editMobileInput" class="settings-input" placeholder="10-digit mobile number">
+        </div>
+        <div>
+          <label class="settings-label" for="editAddressInput">Address</label>
+          <textarea id="editAddressInput" class="settings-input" rows="3" style="resize:vertical;font-family:inherit"></textarea>
+        </div>
+        <p id="profileEditError" style="color:var(--primary);font-size:12.5px;margin:0;display:none"></p>
+        <div style="display:flex;gap:10px">
+          <button type="button" class="btn-primary" id="saveProfileBtn" style="flex:1;border:none;border-radius:8px;padding:11px;font-weight:700;font-size:13.5px;cursor:pointer" onclick="saveProfileChanges()">Save</button>
+          <button type="button" style="flex:1;border:1px solid var(--border);border-radius:8px;padding:11px;font-weight:700;font-size:13.5px;cursor:pointer;background:none;color:var(--navy)" onclick="exitProfileEditMode()">Cancel</button>
+        </div>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:26px 0 22px">
+
+      <div style="font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);margin-bottom:14px">🔐 Account</div>
+      <button type="button" style="border:1px solid var(--primary);color:var(--primary);background:none;border-radius:8px;padding:11px 20px;font-weight:700;font-size:13.5px;cursor:pointer" onclick="requestLogout()">🚪 Logout</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LOGOUT CONFIRMATION MODAL ===================== -->
+<div class="qv-overlay" id="logoutConfirmOverlay" style="z-index:400" onclick="if(event.target===this) closeLogoutConfirm()">
+  <div class="qv-modal" style="grid-template-columns:1fr;max-width:360px">
+    <div class="qv-info" style="padding:28px;text-align:center;align-items:center">
+      <div class="p-name" style="margin-bottom:8px">Log out?</div>
+      <p style="font-size:13.5px;color:var(--text-2);margin:0 0 22px">Are you sure you want to logout?</p>
+      <div style="display:flex;gap:10px;width:100%">
+        <button type="button" style="flex:1;border:1px solid var(--border);border-radius:8px;padding:11px;font-weight:700;font-size:13.5px;cursor:pointer;background:none;color:var(--navy)" onclick="closeLogoutConfirm()">Cancel</button>
+        <button type="button" class="btn-primary" style="flex:1;border:none;border-radius:8px;padding:11px;font-weight:700;font-size:13.5px;cursor:pointer" onclick="performLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- EmailJS SDK (order confirmation emails) — loaded as classic scripts so
+     they're ready before the module script below runs. See emailjs-config.js
+     for where to put your Service ID / Public Key. -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="emailjs-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script type="module">
+  import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
+  import { checkUser } from "./auth.js";
+  import { signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import {
+    collection, query, orderBy, where, onSnapshot, getDocs,
+    addDoc, serverTimestamp, Timestamp, doc, getDoc, setDoc
+  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+  import { buildInvoiceHTML, downloadInvoicePDF, printInvoice } from "./invoice.js";
+
+  // No payment gateway — customers pay manually via the PhonePe QR /
+  // UPI ID shown at checkout, then click "I've Paid — Place Order".
+  // This constant sets the default delivery estimate for every new
+  // order (computed client-side now, at the moment the order is placed,
+  // since there's no server-side step in this flow anymore).
+  const DELIVERY_DURATION_DAYS = 5;
+  function generateOrderNumber() {
+    // Simple human-friendly order number, e.g. TAN-48213. Not guaranteed
+    // globally unique at extreme scale, but fine for a small handmade shop.
+    return 'TAN-' + Math.floor(10000 + Math.random() * 89999);
+  }
+
+  // Internal status keys (as stored in Firestore's `status` field), in
+  // fulfillment-pipeline order — drives which timeline steps are
+  // done/current/upcoming. Pre-payment states ("Payment Pending",
+  // "Payment Failed", "Payment Cancelled") aren't part of this pipeline —
+  // see timelineHTML() below for how those are handled instead.
+  const ORDER_STATUS_KEYS = ['Placed', 'Processing', 'Shipped', 'Delivered'];
+  const STATUS_KEY_TO_LABEL = { Placed: 'Order Placed', Processing: 'Processing', Shipped: 'Shipped', Delivered: 'Delivered', Cancelled: 'Cancelled', 'Payment Pending': 'Payment Pending', 'Payment Failed': 'Payment Failed', 'Payment Cancelled': 'Payment Cancelled' };
+
+  /* ============ STATIC DATA (categories shown as browsable chips, reviews) ============ */
+  const CATEGORIES = [
+    { name: 'Handmade Earring', icon: '💫' },
+    { name: 'Handmade Necklace', icon: '📿' },
+    { name: 'Handpicked Earrings', icon: '✨' },
+    { name: 'Traditional Wears', icon: '🥻' },
+    { name: 'Jewellery Jars', icon: '🏺' },
+    { name: 'Anti Tarnish & Diamond Replica', icon: '💎' },
+  ];
+
+  document.getElementById('categoryGrid').innerHTML = CATEGORIES.map((c, i) => `
+    <div class="cat-card" onclick="filterByCategory('${c.name.replace(/'/g, "\\'")}')">
+      <div class="cat-icon">${c.icon}</div>
+      <h4>${c.name}</h4>
+    </div>
+  `).join('');
+
+  /* ============ PRODUCTS — live from Firestore (admin-managed) ============ */
+  let PRODUCTS = [];
+  let currentProducts = [];
+  let activeCategory = '';
+  const productGrid = document.getElementById('productGrid');
+
+  const productsQuery = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+  onSnapshot(productsQuery, (snapshot) => {
+    PRODUCTS = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    applyFilters();
+    renderStrip();
+  }, (err) => {
+    console.error('Could not load products:', err);
+    productGrid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-2)">Could not load products. Make sure Firestore is enabled and rules are deployed.</p>`;
+  });
+
+  function renderStrip() {
+    const stripRow = document.getElementById('stripRow');
+    if (!stripRow) return;
+    const featured = PRODUCTS.slice(0, 5);
+    stripRow.innerHTML = featured.map(p => {
+      const img = p.imageUrl || `https://placehold.co/300x400?text=${encodeURIComponent(p.name || 'Product')}`;
+      return `<div class="strip-card" onclick="openQuickView('${p.id}')" style="cursor:pointer">
+        <img src="${img}" alt="${escapeHtml(p.name)}" onerror="this.src='https://placehold.co/300x400?text=${encodeURIComponent(p.name || 'Product')}'">
+      </div>`;
+    }).join('');
+  }
+
+  /* ============ COUPONS — live from Firestore (admin-managed) ============ */
+  let COUPONS = []; // only active coupons are kept here
+  const couponsQuery = query(collection(db, 'coupons'), orderBy('createdAt', 'desc'));
+  onSnapshot(couponsQuery, (snapshot) => {
+    COUPONS = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.active);
+    applyFilters();      // re-render product cards so coupon badges stay in sync
+    if (document.getElementById('cartOverlay').classList.contains('open')) renderCartModal();
+  }, (err) => {
+    console.error('Could not load coupons:', err);
+  });
+
+  function getCouponForProduct(productId) {
+    return COUPONS.find(c => c.appliesToAllProducts || (c.productIds || []).includes(productId));
+  }
+
+  function isProductEligibleForCoupon(productId, coupon) {
+    if (!coupon) return false;
+    return coupon.appliesToAllProducts || (coupon.productIds || []).includes(productId);
+  }
+
+  window.copyCoupon = function copyCoupon(code, e) {
+    if (e) e.stopPropagation();
+    navigator.clipboard.writeText(code)
+      .then(() => showToast(`Coupon code copied!`))
+      .catch(() => showToast('Could not copy code — copy it manually: ' + code));
+  };
+
+  window.copyUpiId = function copyUpiId() {
+    navigator.clipboard.writeText('9538162560@ybl')
+      .then(() => showToast('UPI ID copied!'))
+      .catch(() => showToast('Could not copy — copy it manually: 9538162560@ybl'));
+  };
+
+  function couponBadgeHTML(p) {
+    const coupon = getCouponForProduct(p.id);
+    if (!coupon) return '';
+    return `
+      <div class="coupon-badge">
+        <span>🏷️ ${coupon.discountPercentage}% OFF</span>
+        <span class="coupon-code">Code: ${escapeHtml(coupon.code)}</span>
+        <button onclick="copyCoupon('${coupon.code}', event)">Copy Code</button>
+      </div>
+    `;
+  }
+
+  function starString(rating) {
+    rating = Number(rating) || 0;
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(Math.max(0, 5 - full - (half ? 1 : 0)));
+  }
+
+  function productCard(p) {
+    const inStock = p.status !== 'Out of Stock' && Number(p.stock) > 0;
+    const img = p.imageUrl || `https://placehold.co/400x400?text=${encodeURIComponent(p.name || 'Product')}`;
+    return `
+      <div class="p-card fade-in">
+        <div class="p-img-wrap" onclick="openQuickView('${p.id}')" style="cursor:pointer">
+          <img src="${img}" alt="${escapeHtml(p.name)}" onerror="this.src='https://placehold.co/400x400?text=${encodeURIComponent(p.name || 'Product')}'">
+          ${p.discount ? `<span class="p-discount">${p.discount}% OFF</span>` : ''}
+          ${p.tag ? `<span class="p-discount" style="top:${p.discount ? '44px' : '12px'};background:var(--primary)">${escapeHtml(p.tag)}</span>` : ''}
+          <button class="p-wish ${isWishlisted(p.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist('${p.id}')">♡</button>
+        </div>
+        <div class="p-body">
+          <div class="p-name">${escapeHtml(p.name)}</div>
+          <div class="p-desc">${escapeHtml(p.description || '')}</div>
+          <div class="p-rating">${starString(p.rating)} <span class="count">${p.category ? '· ' + escapeHtml(p.category) : ''}</span></div>
+          <div class="p-price"><span class="now">₹${num(p.sellingPrice)}</span>${p.mrp ? `<span class="was">₹${num(p.mrp)}</span>` : ''}</div>
+          ${couponBadgeHTML(p)}
+          <div class="p-meta">
+            <span class="stock ${inStock ? 'in' : 'out'}">${inStock ? 'In Stock' : 'Out of Stock'}</span>
+            <span>🚚 2–4 days</span>
+          </div>
+          <div class="p-actions">
+            <button ${inStock ? '' : 'disabled'} onclick="addToCart('${p.id}')">Add to Cart</button>
+            <button class="buy ${inStock ? '' : 'disabled'}" ${inStock ? '' : 'disabled'} onclick="buyNow('${p.id}')">Buy Now</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function applyFilters() {
+    let list = PRODUCTS;
+    if (activeCategory) list = list.filter(p => (p.category || '').toLowerCase() === activeCategory.toLowerCase());
+    const searchVal = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+    if (searchVal) {
+      list = list.filter(p =>
+        (p.name || '').toLowerCase().includes(searchVal) ||
+        (p.description || '').toLowerCase().includes(searchVal) ||
+        (p.category || '').toLowerCase().includes(searchVal)
+      );
+    }
+    currentProducts = list;
+    productGrid.innerHTML = list.length
+      ? list.map(productCard).join('')
+      : `<p style="grid-column:1/-1;text-align:center;color:var(--text-2)">No products found.</p>`;
+    document.querySelectorAll('#productGrid .fade-in').forEach(el => observer.observe(el));
+  }
+
+  window.filterByCategory = function filterByCategory(name) {
+    activeCategory = activeCategory === name ? '' : name;
+    applyFilters();
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  window.runSearch = function runSearch(mobile) {
+    const src = document.getElementById(mobile ? 'searchInputMobile' : 'searchInput');
+    document.getElementById('searchInput').value = src.value;
+    applyFilters();
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  };
+  document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+  document.getElementById('searchInputMobile').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(true); });
+
+  /* ============ QUICK VIEW ============ */
+  window.openQuickView = function openQuickView(id) {
+    const p = currentProducts.find(x => x.id === id) || PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+    const inStock = p.status !== 'Out of Stock' && Number(p.stock) > 0;
+    const img = p.imageUrl || `https://placehold.co/500x500?text=${encodeURIComponent(p.name || 'Product')}`;
+    document.getElementById('qvImg').src = img;
+    document.getElementById('qvImg').alt = p.name;
+    document.getElementById('qvImg').onerror = function () { this.src = `https://placehold.co/500x500?text=${encodeURIComponent(p.name || 'Product')}`; };
+    document.getElementById('qvInfo').innerHTML = `
+      ${p.discount ? `<span class="p-discount" style="position:static;display:inline-block;margin-bottom:10px">${p.discount}% OFF</span>` : ''}
+      <div class="p-name">${escapeHtml(p.name)}</div>
+      <div class="p-desc">${escapeHtml(p.description || '')}</div>
+      <div class="p-rating">${starString(p.rating)} ${p.artisan ? `<span class="count">by ${escapeHtml(p.artisan)}</span>` : ''}</div>
+      <div class="p-price"><span class="now">₹${num(p.sellingPrice)}</span>${p.mrp ? `<span class="was">₹${num(p.mrp)}</span>` : ''}</div>
+      ${qvCouponHTML(p)}
+      <div class="p-meta">
+        <span class="stock ${inStock ? 'in' : 'out'}">${inStock ? 'In Stock' : 'Out of Stock'}</span>
+        <span>🚚 2–4 days</span>
+      </div>
+      <div class="p-actions">
+        <button ${inStock ? '' : 'disabled'} onclick="addToCart('${p.id}')">Add to Cart</button>
+        <button class="buy" ${inStock ? '' : 'disabled'} onclick="buyNow('${p.id}')">Buy Now</button>
+      </div>
+    `;
+    document.getElementById('qvOverlay').classList.add('open');
+  };
+  window.closeQuickView = function closeQuickView() { document.getElementById('qvOverlay').classList.remove('open'); };
+
+  function qvCouponHTML(p) {
+    const coupon = getCouponForProduct(p.id);
+    if (!coupon) return '';
+    return `
+      <div class="coupon-badge coupon-badge-lg">
+        <span>🏷️ SPECIAL OFFER</span>
+        <span class="coupon-code">Use Coupon Code: <strong>${escapeHtml(coupon.code)}</strong></span>
+        <span>Get ${coupon.discountPercentage}% OFF</span>
+        <button onclick="copyCoupon('${coupon.code}', event)">Copy Code</button>
+      </div>
+    `;
+  }
+
+  /* ============ CART (localStorage, keyed by product id) ============ */
+  function getCart() { return JSON.parse(localStorage.getItem('tan_cart') || '{}'); }
+  function saveCart(cart) {
+    localStorage.setItem('tan_cart', JSON.stringify(cart));
+    const count = Object.values(cart).reduce((s, q) => s + q, 0);
+    document.getElementById('cartBadge').textContent = count;
+  }
+  function updateCartQty(id, qty) {
+    const cart = getCart();
+    if (qty <= 0) delete cart[id]; else cart[id] = qty;
+    saveCart(cart);
+    renderCartModal();
+  }
+
+  window.addToCart = function addToCart(id) {
+    const cart = getCart();
+    cart[id] = (cart[id] || 0) + 1;
+    saveCart(cart);
+    showToast('Added to cart');
+  };
+
+  window.openCartModal = function openCartModal() { renderCartModal(); document.getElementById('cartOverlay').classList.add('open'); };
+  window.closeCartModal = function closeCartModal() { document.getElementById('cartOverlay').classList.remove('open'); };
+
+  let appliedCoupon = null; // { id, code, discountPercentage, appliesToAllProducts, productIds }
+
+  function renderCartModal() {
+    const cart = getCart();
+    const ids = Object.keys(cart);
+    const listEl = document.getElementById('cartItemsList');
+    const summaryEl = document.getElementById('cartSummary');
+    if (!ids.length) {
+      listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">Your cart is empty.</p>`;
+      summaryEl.innerHTML = '';
+      appliedCoupon = null;
+      return;
+    }
+    let subtotal = 0;
+    listEl.innerHTML = ids.map(id => {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return '';
+      const qty = cart[id];
+      subtotal += (Number(p.sellingPrice) || 0) * qty;
+      const img = p.imageUrl || `https://placehold.co/100x100?text=${encodeURIComponent(p.name || '')}`;
+      const eligible = appliedCoupon ? isProductEligibleForCoupon(id, appliedCoupon) : null;
+      const eligibilityTag = appliedCoupon
+        ? (eligible ? `<span style="color:var(--success);font-size:10.5px;font-weight:600">✓ Coupon eligible</span>` : `<span style="color:var(--text-2);font-size:10.5px">✗ Not eligible</span>`)
+        : '';
+      return `
+        <div class="mini-row">
+          <img src="${img}" onerror="this.src='https://placehold.co/100x100'">
+          <div class="info">
+            <div class="name">${escapeHtml(p.name)}</div>
+            <div class="price">₹${num(p.sellingPrice)} × ${qty}</div>
+            ${eligibilityTag}
+          </div>
+          <div class="mini-qty">
+            <button onclick="cartQtyChange('${id}', ${qty - 1})">−</button>
+            <span>${qty}</span>
+            <button onclick="cartQtyChange('${id}', ${qty + 1})">+</button>
+          </div>
+          <button class="mini-remove" onclick="cartQtyChange('${id}', 0)">✕</button>
+        </div>
+      `;
+    }).join('');
+
+    // Discount only applies to eligible items' subtotal (see spec section 8).
+    let discount = 0;
+    if (appliedCoupon) {
+      const eligibleSubtotal = ids.reduce((sum, id) => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p || !isProductEligibleForCoupon(id, appliedCoupon)) return sum;
+        return sum + (Number(p.sellingPrice) || 0) * cart[id];
+      }, 0);
+      discount = Math.round(eligibleSubtotal * appliedCoupon.discountPercentage / 100);
+    }
+    const finalTotal = subtotal - discount;
+
+    const couponSection = appliedCoupon
+      ? `
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-2);margin-bottom:6px">
+          <span>Subtotal</span><span>₹${subtotal}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--success);margin-bottom:6px">
+          <span>Coupon ${escapeHtml(appliedCoupon.code)} (${appliedCoupon.discountPercentage}%)</span><span>−₹${discount}</span>
+        </div>
+        <p style="font-size:11.5px;color:var(--success);margin-bottom:10px">✓ Coupon ${escapeHtml(appliedCoupon.code)} applied successfully. <a href="#" onclick="event.preventDefault(); removeCoupon()" style="color:var(--primary);text-decoration:underline">Remove</a></p>
+      `
+      : `
+        <div style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:6px">Have a coupon?</label>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="couponInput" placeholder="Enter coupon code" style="flex:1;border:1px solid var(--border);border-radius:8px;padding:9px 10px;font-size:13.5px;text-transform:uppercase">
+            <button onclick="applyCouponCode()" style="border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;padding:0 16px;font-size:12.5px;font-weight:600;cursor:pointer">Apply</button>
+          </div>
+          <p id="couponMessage" style="font-size:11.5px;margin-top:6px"></p>
+        </div>
+      `;
+
+    summaryEl.innerHTML = `
+      ${couponSection}
+      <div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:14px;font-size:15px"><span>Total</span><span>₹${finalTotal}</span></div>
+      <button class="btn-primary" style="width:100%;border:none;border-radius:10px;padding:12px;font-weight:600;cursor:pointer;color:#fff;background:var(--primary)" onclick="checkout()">Proceed to Checkout</button>
+    `;
+  }
+  window.cartQtyChange = function cartQtyChange(id, qty) { updateCartQty(id, qty); };
+
+  window.applyCouponCode = function applyCouponCode() {
+    const input = document.getElementById('couponInput');
+    const msgEl = document.getElementById('couponMessage');
+    const code = (input.value || '').trim().toUpperCase();
+    if (!code) return;
+
+    const coupon = COUPONS.find(c => c.code === code); // COUPONS already filtered to active-only
+    if (!coupon) {
+      msgEl.textContent = '❌ Invalid or inactive coupon code.';
+      msgEl.style.color = 'var(--primary)';
+      return;
+    }
+
+    const cart = getCart();
+    const cartIds = Object.keys(cart);
+    const hasEligibleItem = cartIds.some(id => isProductEligibleForCoupon(id, coupon));
+    if (!hasEligibleItem) {
+      msgEl.textContent = '❌ This coupon is not valid for the selected product(s).';
+      msgEl.style.color = 'var(--primary)';
+      return;
+    }
+
+    appliedCoupon = coupon;
+    renderCartModal();
+    showToast(`Coupon ${code} applied`);
+  };
+
+  window.removeCoupon = function removeCoupon() {
+    appliedCoupon = null;
+    renderCartModal();
+  };
+
+
+  /* ============ WISHLIST (localStorage, array of ids) ============ */
+  function getWishlist() { return JSON.parse(localStorage.getItem('tan_wishlist') || '[]'); }
+  function saveWishlist(list) {
+    localStorage.setItem('tan_wishlist', JSON.stringify(list));
+    document.getElementById('wishBadge').textContent = list.length;
+  }
+  function isWishlisted(id) { return getWishlist().includes(id); }
+
+  window.toggleWishlist = function toggleWishlist(id) {
+    let list = getWishlist();
+    if (list.includes(id)) { list = list.filter(x => x !== id); showToast('Removed from wishlist'); }
+    else { list.push(id); showToast('Added to wishlist'); }
+    saveWishlist(list);
+    applyFilters(); // refresh heart icon state on cards
+  };
+
+  window.openWishlistModal = function openWishlistModal() { renderWishlistModal(); document.getElementById('wishlistOverlay').classList.add('open'); };
+  window.closeWishlistModal = function closeWishlistModal() { document.getElementById('wishlistOverlay').classList.remove('open'); };
+
+  /* ============ TODAY'S SPECIAL OFFERS — hash-routed detail view ============
+     Route slugs (in the URL, e.g. #offer/buy2get1) map to this content.
+     Clicking a card navigates to a real, addressable route — browser
+     Back/Forward and reload-to-same-offer both work via hashchange,
+     not just a scroll or a modal popup.
+  ================================================================= */
+  const OFFER_CONTENT = {
+    buy2get1: {
+      icon: '🎁',
+      title: 'Buy 2 Get 1 Free',
+      desc: 'Buy any 2 eligible handmade jewelry or accessories and receive 1 eligible item free.',
+      note: 'Eligibility depends on the products marked as eligible for this offer. The discount is not applied automatically — it follows however the existing cart/coupon system on this site already supports it.',
+    },
+    'free-shipping': {
+      icon: '🚚',
+      title: 'Free Shipping',
+      desc: 'Enjoy free shipping on eligible orders above ₹999.',
+      highlight: 'Minimum order value: ₹999',
+    },
+    extra10: {
+      icon: '💸',
+      title: 'Extra 10% Off',
+      desc: 'Get an additional 10% off your first order.',
+      coupon: 'HANDMADE10',
+    },
+    'member-rewards': {
+      icon: '⭐',
+      title: 'Member Rewards',
+      desc: 'Earn reward points on eligible purchases and use your points on future orders.',
+      note: 'This is a preview of our upcoming rewards program — points aren\'t tracked yet, so nothing is added to your account for past or current purchases.',
+    },
+  };
+
+  function renderOfferDetail(slug) {
+    const offer = OFFER_CONTENT[slug];
+    const content = document.getElementById('offerDetailContent');
+    if (!offer) {
+      content.innerHTML = `<p style="color:var(--text-2)">Offer not found.</p>`;
+      return;
+    }
+    content.innerHTML = `
+      <div class="offer-detail-icon">${offer.icon}</div>
+      <h1 class="offer-detail-title">${offer.title}</h1>
+      <p class="offer-detail-desc">${offer.desc}</p>
+      ${offer.highlight ? `<div class="offer-detail-highlight">${offer.highlight}</div>` : ''}
+      ${offer.coupon ? `
+        <div class="offer-coupon-box">
+          <div class="lbl">Coupon Code</div>
+          <div class="code">${offer.coupon}</div>
+        </div>
+        <button type="button" id="copyOfferCodeBtn" class="btn btn-outline" style="width:100%;justify-content:center;color:var(--navy);border-color:var(--navy)" onclick="copyOfferCode()">Copy Code</button>
+        <p class="offer-copy-msg" id="offerCopyMsg"></p>
+      ` : ''}
+      ${offer.note ? `<p class="offer-detail-note">${offer.note}</p>` : ''}
+      <button type="button" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px" onclick="scrollToProducts()">Shop Now</button>
+    `;
+  }
+
+  window.copyOfferCode = function copyOfferCode() {
+    const btn = document.getElementById('copyOfferCodeBtn');
+    const msg = document.getElementById('offerCopyMsg');
+    navigator.clipboard.writeText('HANDMADE10')
+      .then(() => {
+        if (btn) {
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = original; }, 1800);
+        }
+        if (msg) msg.textContent = 'Copied!';
+      })
+      .catch(() => { if (msg) msg.textContent = 'Could not copy — copy it manually: HANDMADE10'; });
+  };
+
+  window.scrollToProducts = function scrollToProducts() {
+    window.location.hash = ''; // leaves the offer view, back to the homepage
+    setTimeout(() => document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  };
+
+  /* ---------- Minimal hash router (offer detail view only — the
+     Privacy/Terms/Refund policies already live on their own real pages:
+     privacy-policy.html / terms.html / refund-policy.html) ---------- */
+  let savedScrollY = 0;
+
+  function setHomeSectionsVisible(visible) {
+    document.querySelectorAll('body > section').forEach((sec) => {
+      sec.style.display = visible ? '' : 'none';
+    });
+  }
+
+  function renderRoute() {
+    const hash = window.location.hash.replace(/^#\/?/, '');
+    const match = hash.match(/^offer\/(.+)$/);
+
+    if (match && OFFER_CONTENT[match[1]]) {
+      savedScrollY = window.scrollY || savedScrollY;
+      renderOfferDetail(match[1]);
+      setHomeSectionsVisible(false);
+      document.getElementById('offerDetailView').style.display = 'block';
+      window.scrollTo(0, 0);
+    } else {
+      document.getElementById('offerDetailView').style.display = 'none';
+      setHomeSectionsVisible(true);
+      // Restore where the shopper was before opening the offer, if we have it.
+      if (savedScrollY) { window.scrollTo(0, savedScrollY); savedScrollY = 0; }
+    }
+  }
+
+  window.goToOffer = function goToOffer(slug) {
+    window.location.hash = 'offer/' + slug;
+  };
+
+  window.navigateBack = function navigateBack() {
+    window.location.hash = '';
+  };
+
+  window.handleOffersNavClick = function handleOffersNavClick(event) {
+    event.preventDefault();
+    const hadOfferOpen = window.location.hash.startsWith('#offer/');
+    if (hadOfferOpen) window.location.hash = ''; // closes the open offer view first
+    // Give the hashchange handler a moment to un-hide the homepage sections
+    // before scrolling to #offers — only needed when we just closed a view.
+    setTimeout(() => {
+      document.getElementById('offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, hadOfferOpen ? 60 : 0);
+    return false;
+  };
+
+  window.addEventListener('hashchange', renderRoute);
+  renderRoute(); // handle a direct link straight to #offer/... on first load
+
+  function renderWishlistModal() {
+    const ids = getWishlist();
+    const listEl = document.getElementById('wishlistItemsList');
+    if (!ids.length) {
+      listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">Your wishlist is empty.</p>`;
+      return;
+    }
+    listEl.innerHTML = ids.map(id => {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return '';
+      const img = p.imageUrl || `https://placehold.co/100x100?text=${encodeURIComponent(p.name || '')}`;
+      return `
+        <div class="mini-row">
+          <img src="${img}" onerror="this.src='https://placehold.co/100x100'">
+          <div class="info">
+            <div class="name">${escapeHtml(p.name)}</div>
+            <div class="price">₹${num(p.sellingPrice)}</div>
+          </div>
+          <button class="btn" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer" onclick="addToCart('${id}')">Add to Cart</button>
+          <button class="mini-remove" onclick="toggleWishlist('${id}'); renderWishlistModalRefresh()">✕</button>
+        </div>
+      `;
+    }).join('');
+  }
+  window.renderWishlistModalRefresh = function renderWishlistModalRefresh() { renderWishlistModal(); };
+
+  /* ============ CHECKOUT & ORDERS (Firestore) ============ */
+  let currentUser = null;
+  let pendingOrder = null;   // { items, isFromCart, coupon } — collected before the address step
+  let orderSubmitting = false; // guards against a double-click firing two orders/emails
+
+  window.buyNow = function buyNow(id) {
+    if (!currentUser) { alert('Please log in to continue.'); window.location.href = 'login.html'; return; }
+    pendingOrder = { items: [{ id, qty: 1 }], isFromCart: false, coupon: null };
+    openAddressModal();
+  };
+
+  window.checkout = function checkout() {
+    if (!currentUser) { alert('Please log in to checkout.'); window.location.href = 'login.html'; return; }
+    const cart = getCart();
+    const items = Object.keys(cart).map(id => ({ id, qty: cart[id] }));
+    if (!items.length) { showToast('Your cart is empty'); return; }
+    pendingOrder = { items, isFromCart: true, coupon: appliedCoupon };
+    openAddressModal();
+  };
+
+  // Computes the order total client-side from real Firestore product
+  // prices. There's no payment gateway anymore, so there's no separate
+  // server-side recomputation step — this value is what actually gets
+  // saved on the order and shown as "Amount to Pay". Because payment is
+  // manual (customer pays via UPI/PhonePe QR and declares it themselves),
+  // the real backstop against a wrong amount is the admin manually
+  // checking the actual UPI transaction before marking payment as Paid.
+  function estimateDisplayTotal(items, coupon) {
+    const orderItems = items.map(({ id, qty }) => {
+      const p = PRODUCTS.find(x => x.id === id);
+      return p ? { productId: id, price: Number(p.sellingPrice) || 0, qty } : null;
+    }).filter(Boolean);
+    const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
+    let discount = 0;
+    if (coupon) {
+      const eligible = orderItems.reduce((sum, i) => isProductEligibleForCoupon(i.productId, coupon) ? sum + i.price * i.qty : sum, 0);
+      discount = Math.round(eligible * coupon.discountPercentage / 100);
+    }
+    return Math.max(0, subtotal - discount);
+  }
+
+  window.openAddressModal = function openAddressModal() {
+    document.getElementById('deliveryAddressInput').value = '';
+    document.getElementById('addressError').style.display = 'none';
+    document.getElementById('phoneInput').value = '';
+    document.getElementById('phoneError').style.display = 'none';
+    document.getElementById('utrInput').value = '';
+    document.getElementById('utrError').style.display = 'none';
+    const total = pendingOrder ? estimateDisplayTotal(pendingOrder.items, pendingOrder.coupon) : 0;
+    document.getElementById('addressOrderTotal').textContent = `₹${total}`;
+    document.getElementById('confirmAddressBtn').textContent = `I've Paid — Place Order`;
+    document.getElementById('addressOverlay').classList.add('open');
+  };
+  window.closeAddressModal = function closeAddressModal() {
+    document.getElementById('addressOverlay').classList.remove('open');
+    pendingOrder = null;
+  };
+
+  // Single entry point into startPayment() for both Buy Now and cart
+  // checkout — also doubles as the fix for double-submission.
+  window.confirmDeliveryAddress = async function confirmDeliveryAddress() {
+    if (orderSubmitting || !pendingOrder) return;
+
+    const address = document.getElementById('deliveryAddressInput').value.trim();
+    if (!address) {
+      const errEl = document.getElementById('addressError');
+      errEl.textContent = 'Please enter a delivery address.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const phone = document.getElementById('phoneInput').value.trim();
+    document.getElementById('phoneError').style.display = 'none';
+    if (!/^\d{10,15}$/.test(phone.replace(/[\s-]/g, ''))) {
+      const phoneErrEl = document.getElementById('phoneError');
+      phoneErrEl.textContent = 'Please enter a valid mobile number.';
+      phoneErrEl.style.display = 'block';
+      return;
+    }
+
+    const utr = document.getElementById('utrInput').value.trim();
+    document.getElementById('utrError').style.display = 'none';
+    if (!utr) {
+      const utrErrEl = document.getElementById('utrError');
+      utrErrEl.textContent = 'Please enter your UTR / transaction reference number.';
+      utrErrEl.style.display = 'block';
+      return;
+    }
+
+    orderSubmitting = true;
+    const btn = document.getElementById('confirmAddressBtn');
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Placing your order…';
+
+    try {
+      await startPayment(pendingOrder, address, utr, phone.replace(/[\s-]/g, ''));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      orderSubmitting = false;
+    }
+  };
+
+  /* ============ MANUAL UPI / PHONEPE PAYMENT ============
+     There is no payment gateway anymore. The customer pays by scanning
+     the PhonePe QR shown in the address modal (or using any UPI app with
+     the UPI ID), then clicks "I've Paid — Place Order". Clicking that
+     button only records the customer's DECLARATION that they paid — it
+     does not and cannot verify a real bank transfer. The order is
+     created with paymentStatus:"pending" and status:"Placed"; an admin
+     must manually check the actual PhonePe/UPI account and mark the
+     order's Payment Status as "Paid" from the admin dashboard before
+     it's treated as a confirmed sale. Nothing here fabricates payment
+     verification.
+  ================================================================= */
+  async function startPayment(order, address, utr, phone) {
+    try {
+      const orderItems = order.items.map(({ id, qty }) => {
+        const p = PRODUCTS.find((x) => x.id === id);
+        return p ? { productId: id, name: p.name, price: p.sellingPrice, qty, imageUrl: p.imageUrl || '' } : null;
+      }).filter(Boolean);
+
+      if (!orderItems.length) { showToast('Could not find those products.'); return; }
+
+      const subtotal = orderItems.reduce((sum, i) => sum + (Number(i.price) || 0) * i.qty, 0);
+
+      let discount = 0;
+      const coupon = order.coupon;
+      if (coupon) {
+        const eligibleSubtotal = orderItems.reduce((sum, i) => {
+          if (!isProductEligibleForCoupon(i.productId, coupon)) return sum;
+          return sum + (Number(i.price) || 0) * i.qty;
+        }, 0);
+        discount = Math.round(eligibleSubtotal * coupon.discountPercentage / 100);
+      }
+      const total = Math.max(0, subtotal - discount);
+      const orderNumber = generateOrderNumber();
+      const now = Timestamp.now();
+      const estimatedDeliveryAt = Timestamp.fromDate(new Date(Date.now() + DELIVERY_DURATION_DAYS * 24 * 60 * 60 * 1000));
+
+      const orderData = {
+        orderNumber,
+        customerId: currentUser.uid,
+        customerEmail: currentUser.email,
+        customerName: currentUser.displayName || '',
+        items: orderItems,
+        subtotal,
+        discount,
+        total,
+        address,
+        customerPhone: phone || '',
+        utr,
+        paymentMethod: 'UPI / PhonePe',
+        paymentStatus: 'Pending Verification', // admin must manually verify and flip to "Paid"
+        status: 'Placed',
+        createdAt: serverTimestamp(),
+        estimatedDeliveryAt,
+        deliveredAt: null,
+        statusHistory: [{ status: 'Placed', timestamp: now }],
+      };
+      if (coupon) orderData.couponCode = coupon.code;
+
+      await addDoc(collection(db, 'orders'), orderData);
+
+      if (order.isFromCart) { saveCart({}); appliedCoupon = null; }
+      closeAddressModal();
+      closeCartModal();
+
+      showOrderConfirmed(orderData);
+      sendOrderConfirmationEmail(orderData);
+    } catch (err) {
+      console.error('Could not place order:', err);
+      showToast('Could not place your order — please try again.');
+    }
+  }
+
+  /* ============ ORDER CONFIRMED PAGE ============ */
+  function showOrderConfirmed(order) {
+    document.getElementById('ocOrderId').textContent = order.orderNumber || '';
+    document.getElementById('ocOrderDate').textContent = formatDDMMYYYY(new Date());
+    document.getElementById('ocTotal').textContent = `₹${num(order.total)}`;
+    document.getElementById('ocUtr').textContent = order.utr || '—';
+    document.getElementById('ocProductsList').innerHTML = (order.items || []).map(i => `
+      <div style="display:flex;align-items:center;gap:10px">
+        <img src="${i.imageUrl || `https://placehold.co/60x60?text=${encodeURIComponent(i.name)}`}" alt="${escapeHtml(i.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0">
+        <span style="font-size:13.5px">${escapeHtml(i.name)} × ${i.qty}</span>
+      </div>
+    `).join('');
+    document.getElementById('orderConfirmedOverlay').classList.add('open');
+  }
+  window.closeOrderConfirmed = function closeOrderConfirmed() {
+    document.getElementById('orderConfirmedOverlay').classList.remove('open');
+  };
+
+  /* ============ ORDER CONFIRMATION EMAIL (EmailJS) ============
+     Credentials come from window.EMAILJS_CONFIG — see emailjs-config.js.
+     Sent right after the order is created. Since payment is manual and
+     unverified at this point, the email must not claim the payment is
+     confirmed — see paymentStatus below.
+  ================================================================= */
+  function formatDDMMYYYY(date) {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+  }
+
+  function formatProductsForEmail(items) {
+    return (items || [])
+      .map(i => `${i.name} x ${i.qty} - ₹${(Number(i.price) || 0) * i.qty}`)
+      .join('\n');
+  }
+
+  async function sendOrderConfirmationEmail(orderData) {
+    if (typeof emailjs === 'undefined' || !window.EMAILJS_CONFIG) {
+      console.error('EmailJS SDK/config not loaded — confirmation email skipped.');
+      return;
+    }
+    const { SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY } = window.EMAILJS_CONFIG;
+    if (!SERVICE_ID || SERVICE_ID.startsWith('YOUR_') || !PUBLIC_KEY || PUBLIC_KEY.startsWith('YOUR_')) {
+      console.error('EmailJS is not configured yet — fill in emailjs-config.js. Confirmation email skipped.');
+      return;
+    }
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          email: orderData.customerEmail,
+          name: orderData.customerName || orderData.customerEmail,
+          title: 'Order Confirmation',
+          orderId: orderData.orderNumber,
+          orderDate: formatDDMMYYYY(new Date()),
+          products: formatProductsForEmail(orderData.items),
+          total: `₹${orderData.total}`,
+          address: orderData.address || '',
+          utr: orderData.utr || '',
+          paymentMethod: 'UPI / PhonePe',
+          paymentStatus: 'Pending Verification',
+        },
+        PUBLIC_KEY
+      );
+    } catch (err) {
+      // The order itself already succeeded (see startPayment above) — a
+      // failed email must never cancel or roll it back. Surface it quietly.
+      console.error('Order confirmation email failed to send:', err);
+      showToast('Order placed successfully. Confirmation email could not be sent.');
+    }
+  }
+
+  // Populated every time "My Orders" is opened, scoped to the signed-in
+  // customer's own orders only (see the query below) — the Invoice
+  // buttons on each order card look up their order from this array, so
+  // a customer can never reach another customer's invoice.
+  let MY_ORDERS = [];
+
+  window.openOrdersModal = async function openOrdersModal() {
+    if (!currentUser) { alert('Please log in to view your orders.'); window.location.href = 'login.html'; return; }
+    const listEl = document.getElementById('ordersItemsList');
+    listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">Loading your orders…</p>`;
+    document.getElementById('ordersOverlay').classList.add('open');
+    try {
+      const q = query(collection(db, 'orders'), where('customerId', '==', currentUser.uid), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      MY_ORDERS = orders;
+      if (!orders.length) {
+        listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">You haven't placed any orders yet.</p>`;
+        return;
+      }
+      listEl.innerHTML = orders.map(o => {
+        const orderNum = o.orderNumber || (o.id || '').slice(0, 8).toUpperCase();
+        const itemsHTML = (o.items || []).map(i => {
+          const img = i.imageUrl || `https://placehold.co/100x100?text=${encodeURIComponent(i.name || '')}`;
+          return `
+            <div class="mini-row" style="margin-bottom:8px">
+              <img src="${img}" onerror="this.src='https://placehold.co/100x100'">
+              <div class="info">
+                <div class="name">${escapeHtml(i.name)}</div>
+                <div class="price">Qty: ${i.qty} · ₹${num(i.price)}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        const deliveryLine = o.status === 'Delivered' && o.deliveredAt
+          ? `<div class="order-info-row"><span class="k">Delivered</span><span class="v" style="color:var(--success)">${formatDateTime(o.deliveredAt)}</span></div>`
+          : (o.estimatedDeliveryAt ? `<div class="order-info-row"><span class="k">Estimated Delivery</span><span class="v">${formatDateOnly(o.estimatedDeliveryAt)}</span></div>` : '');
+
+        return `
+          <div class="order-card">
+            <div class="oc-top"><span>#${escapeHtml(orderNum)}</span><span class="oc-status">${escapeHtml(STATUS_KEY_TO_LABEL[o.status] || o.status || 'Payment Pending')}</span></div>
+            <div style="font-size:11px;color:var(--text-2);margin-bottom:10px">Placed: ${formatDateTime(o.createdAt)}</div>
+            ${itemsHTML}
+            ${o.couponCode ? `<div style="font-size:11.5px;color:var(--success);margin:6px 0 2px">🏷️ Coupon ${escapeHtml(o.couponCode)} applied — saved ₹${num(o.discount)}</div>` : ''}
+            <div class="order-info-card" style="margin-top:10px">
+              <div class="order-info-row"><span class="k">Total Amount</span><span class="v">₹${num(o.total)}</span></div>
+              <div class="order-info-row"><span class="k">Payment</span><span class="v">${escapeHtml(o.paymentStatus || 'pending')}</span></div>
+              <div class="order-info-row"><span class="k">Current Status</span><span class="v">${escapeHtml(STATUS_KEY_TO_LABEL[o.status] || o.status || 'Payment Pending')}</span></div>
+              ${deliveryLine}
+            </div>
+            ${invoiceButtonsHtml(o)}
+            <button class="btn btn-outline" style="width:100%;margin-top:10px;justify-content:center" onclick="trackFromMyOrders('${escapeHtml(orderNum)}')">Track Order</button>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      console.error(err);
+      listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">Could not load orders.</p>`;
+    }
+  };
+  window.closeOrdersModal = function closeOrdersModal() { document.getElementById('ordersOverlay').classList.remove('open'); };
+
+  /* ============ INVOICE (customer side) ============
+     Only ever operates on MY_ORDERS — populated exclusively from a
+     query scoped to `customerId == currentUser.uid` (see
+     openOrdersModal above) — so a customer can never view, download,
+     print, or otherwise reach another customer's invoice. Customers
+     never write invoiceNumber/invoiceDate themselves; those are only
+     ever set by the admin (see admin.js), enforced server-side by
+     firestore.rules (`allow update, delete: if isAdmin()` on orders).
+  ================================================================= */
+  function invoiceButtonsHtml(o) {
+    if ((o.paymentStatus || 'Pending Verification') !== 'Paid') return '';
+    if (!o.invoiceNumber) {
+      return `<div style="font-size:11.5px;color:var(--text-2);font-style:italic;margin-top:8px">Invoice is being prepared — please check back shortly.</div>`;
+    }
+    return `
+      <div class="invoice-btn-row">
+        <button class="btn btn-outline" style="flex:1;justify-content:center;padding:9px 12px;font-size:11px;color:var(--navy);border-color:var(--navy)" onclick="viewMyInvoice('${o.id}')">View Invoice</button>
+        <button class="btn btn-outline" style="flex:1;justify-content:center;padding:9px 12px;font-size:11px;color:var(--navy);border-color:var(--navy)" onclick="downloadMyInvoice('${o.id}')">Download</button>
+        <button class="btn btn-outline" style="flex:1;justify-content:center;padding:9px 12px;font-size:11px;color:var(--navy);border-color:var(--navy)" onclick="printMyInvoice('${o.id}')">Print</button>
+      </div>
+    `;
+  }
+
+  function findMyOrder(orderId) {
+    const o = MY_ORDERS.find(x => x.id === orderId);
+    // Defense in depth — even though MY_ORDERS is already scoped to the
+    // signed-in customer's own orders, double-check before ever
+    // rendering an invoice, in case this function is ever called with
+    // a stale/foreign id.
+    if (!o || !currentUser || o.customerId !== currentUser.uid) return null;
+    return o;
+  }
+
+  window.viewMyInvoice = function viewMyInvoice(orderId) {
+    const o = findMyOrder(orderId);
+    if (!o || !o.invoiceNumber) { showToast('Invoice not available.'); return; }
+    document.getElementById('invoiceModalBody').innerHTML = buildInvoiceHTML(o);
+    document.getElementById('invoiceModalOverlay').classList.add('open');
+    window.__activeInvoiceOrderId = orderId;
+  };
+  window.closeInvoiceModal = function closeInvoiceModal() {
+    document.getElementById('invoiceModalOverlay').classList.remove('open');
+    window.__activeInvoiceOrderId = null;
+  };
+  window.downloadMyInvoice = async function downloadMyInvoice(orderId) {
+    const o = findMyOrder(orderId);
+    if (!o || !o.invoiceNumber) { showToast('Invoice not available.'); return; }
+    await downloadInvoicePDF(o);
+  };
+  window.printMyInvoice = function printMyInvoice(orderId) {
+    const o = findMyOrder(orderId);
+    if (!o || !o.invoiceNumber) { showToast('Invoice not available.'); return; }
+    printInvoice(o);
+  };
+  window.downloadInvoiceFromModal = function downloadInvoiceFromModal() {
+    if (window.__activeInvoiceOrderId) window.downloadMyInvoice(window.__activeInvoiceOrderId);
+  };
+  window.printInvoiceFromModal = function printInvoiceFromModal() {
+    if (window.__activeInvoiceOrderId) window.printMyInvoice(window.__activeInvoiceOrderId);
+  };
+
+
+  /* ============ SETTINGS / PROFILE / LOGOUT ============ */
+  // Profile is stored in the same customers/{uid} doc that auth.js
+  // already creates on login/register (upsertCustomerDoc) — this just
+  // extends it with mobile + address; no separate/duplicate record.
+  window.openSettingsModal = async function openSettingsModal() {
+    if (!currentUser) { alert('Please log in to view settings.'); window.location.href = 'login.html'; return; }
+    exitProfileEditMode();
+    document.getElementById('settingsOverlay').classList.add('open');
+    document.getElementById('profileName').textContent = 'Loading…';
+    document.getElementById('profileEmail').textContent = currentUser.email || '—';
+    document.getElementById('profileMobile').textContent = 'Loading…';
+    document.getElementById('profileAddress').textContent = 'Loading…';
+    try {
+      const snap = await getDoc(doc(db, 'customers', currentUser.uid));
+      const profile = snap.exists() ? snap.data() : {};
+      document.getElementById('profileName').textContent = profile.name || currentUser.displayName || '—';
+      document.getElementById('profileEmail').textContent = currentUser.email || '—';
+      document.getElementById('profileMobile').textContent = profile.mobile || '—';
+      document.getElementById('profileAddress').textContent = profile.address || '—';
+    } catch (err) {
+      console.error(err);
+      document.getElementById('profileName').textContent = currentUser.displayName || '—';
+      document.getElementById('profileMobile').textContent = '—';
+      document.getElementById('profileAddress').textContent = '—';
+      showToast('Could not load your full profile — some fields may be blank.');
+    }
+  };
+  window.closeSettingsModal = function closeSettingsModal() {
+    document.getElementById('settingsOverlay').classList.remove('open');
+    exitProfileEditMode();
+  };
+
+  window.enterProfileEditMode = function enterProfileEditMode() {
+    document.getElementById('editNameInput').value = document.getElementById('profileName').textContent.replace(/^—$/, '');
+    document.getElementById('editEmailInput').value = currentUser ? (currentUser.email || '') : '';
+    document.getElementById('editMobileInput').value = document.getElementById('profileMobile').textContent.replace(/^—$/, '');
+    document.getElementById('editAddressInput').value = document.getElementById('profileAddress').textContent.replace(/^—$/, '');
+    document.getElementById('profileEditError').style.display = 'none';
+    document.getElementById('profileViewMode').style.display = 'none';
+    document.getElementById('profileEditMode').style.display = 'flex';
+  };
+  window.exitProfileEditMode = function exitProfileEditMode() {
+    document.getElementById('profileEditMode').style.display = 'none';
+    document.getElementById('profileViewMode').style.display = 'flex';
+  };
+
+  window.saveProfileChanges = async function saveProfileChanges() {
+    if (!currentUser) return;
+    const errEl = document.getElementById('profileEditError');
+    errEl.style.display = 'none';
+
+    const name = document.getElementById('editNameInput').value.trim();
+    const mobile = document.getElementById('editMobileInput').value.trim();
+    const address = document.getElementById('editAddressInput').value.trim();
+
+    if (!name) {
+      errEl.textContent = 'Please enter your name.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (mobile && !/^[0-9]{10}$/.test(mobile)) {
+      errEl.textContent = 'Please enter a valid 10-digit mobile number.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('saveProfileBtn');
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Saving…';
+    try {
+      // Own-uid write — allowed by firestore.rules (customers/{uid}: owner read/write).
+      await setDoc(doc(db, 'customers', currentUser.uid), { name, mobile, address }, { merge: true });
+      // Keep Firebase Auth's displayName in sync (used elsewhere, e.g. order confirmations).
+      if (currentUser.displayName !== name) {
+        await updateProfile(auth.currentUser, { displayName: name });
+      }
+      document.getElementById('profileName').textContent = name || '—';
+      document.getElementById('profileMobile').textContent = mobile || '—';
+      document.getElementById('profileAddress').textContent = address || '—';
+      exitProfileEditMode();
+      showToast('Profile updated.');
+    } catch (err) {
+      console.error(err);
+      errEl.textContent = 'Could not save your changes — please try again.';
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  };
+
+  // Logout always goes through this confirmation, whether triggered from
+  // the header dropdown or from inside Settings.
+  window.requestLogout = function requestLogout() {
+    document.getElementById('logoutConfirmOverlay').classList.add('open');
+  };
+  window.closeLogoutConfirm = function closeLogoutConfirm() {
+    document.getElementById('logoutConfirmOverlay').classList.remove('open');
+  };
+  window.performLogout = async function performLogout() {
+    closeLogoutConfirm();
+    try {
+      await signOut(auth);
+      // Full navigation (not just closing modals) guarantees no private
+      // customer info — profile, orders, cart badges — stays on screen.
+      window.location.href = 'index.html';
+    } catch (err) {
+      console.error(err);
+      showToast('Could not log out — please try again.');
+    }
+  };
+
+  // "Track Order" button on a My Orders card — closes the modal, fills in
+  // the Track Order search box with this order's number, scrolls to it,
+  // and runs the search immediately.
+  window.trackFromMyOrders = function trackFromMyOrders(orderNumber) {
+    closeOrdersModal();
+    document.getElementById('trackOrderInput').value = orderNumber;
+    document.getElementById('track-order').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(window.trackOrder, 400); // let the scroll finish before it renders
+  };
+
+  /* ============ TRACK ORDER (Firestore, ownership-checked) ============ */
+
+  // Shared date/time formatter — uses the browser's local timezone
+  // automatically, no manual offset math.
+  const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
+    day: '2-digit', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',
+  });
+  const dateOnlyFormatter = new Intl.DateTimeFormat(undefined, {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+  function toDate(ts) {
+    if (!ts) return null;
+    return ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : new Date(ts));
+  }
+  function formatDateTime(ts) {
+    const d = toDate(ts);
+    return d ? dateTimeFormatter.format(d) : '—';
+  }
+  function formatDateOnly(ts) {
+    const d = toDate(ts);
+    return d ? dateOnlyFormatter.format(d) : '—';
+  }
+
+  function timelineHTML(order) {
+    const status = order.status || 'Payment Pending';
+
+    // Pre-payment / non-fulfillment states aren't part of the shipping
+    // pipeline — show a clear message instead of a misleading timeline.
+    if (status === 'Payment Pending') {
+      return `<div class="timeline-cancelled" style="background:#FEF3C7;color:#92400E">⏳ Payment is still processing. This usually finalizes within a minute — check back shortly, or contact support with your Order ID if it doesn't update.</div>`;
+    }
+    if (status === 'Payment Failed') {
+      return `<div class="timeline-cancelled">❌ Payment failed for this order. Please place a new order, or contact support if you were charged.</div>`;
+    }
+    if (status === 'Payment Cancelled') {
+      return `<div class="timeline-cancelled">This order was cancelled before payment was completed.</div>`;
+    }
+    if (status === 'Cancelled') {
+      return `<div class="timeline-cancelled">❌ This order was cancelled.</div>`;
+    }
+
+    const history = order.statusHistory || [];
+    const historyFor = (key) => history.find(h => h.status === key);
+    const currentIndex = ORDER_STATUS_KEYS.findIndex(k => k === status);
+    const idx = currentIndex === -1 ? 0 : currentIndex; // unknown status -> treat as just placed
+
+    return `
+      <div class="timeline">
+        ${ORDER_STATUS_KEYS.map((key, i) => {
+          let cls = '';
+          let icon = '○';
+          if (i < idx) { cls = 'done'; icon = '✓'; }
+          else if (i === idx) {
+            if (status === 'Delivered') { cls = 'done'; icon = '✓'; }
+            else { cls = 'current'; icon = '🔵'; }
+          }
+          const entry = historyFor(key);
+          const timeLabel = (cls === 'done' || cls === 'current') && entry
+            ? `<div class="step-time">${formatDateTime(entry.timestamp)}</div>` : '';
+          return `<div class="timeline-step ${cls}"><div class="dot">${icon}</div><div class="label">${STATUS_KEY_TO_LABEL[key] || key}</div>${timeLabel}</div>`;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  function deliveryInfoHTML(order) {
+    if (order.status === 'Delivered' && order.deliveredAt) {
+      return `<div class="order-info-row"><span class="k">Delivered On</span><span class="v" style="color:var(--success)">${formatDateTime(order.deliveredAt)}</span></div>
+              <div style="text-align:center;color:var(--success);font-weight:700;font-size:13px;margin-top:12px">✓ Delivered successfully</div>`;
+    }
+    if (order.estimatedDeliveryAt) {
+      return `<div class="order-info-row"><span class="k">Estimated Delivery</span><span class="v">${formatDateOnly(order.estimatedDeliveryAt)}</span></div>`;
+    }
+    return '';
+  }
+
+  let trackUnsubscribe = null; // detach the previous live listener before starting a new search
+
+  window.trackOrder = function trackOrder() {
+    const input = document.getElementById('trackOrderInput');
+    const msgEl = document.getElementById('trackMessage');
+    const resultEl = document.getElementById('trackResult');
+    resultEl.style.display = 'none';
+    msgEl.className = 'track-message';
+
+    if (trackUnsubscribe) { trackUnsubscribe(); trackUnsubscribe = null; }
+
+    let code = (input.value || '').trim().toUpperCase();
+    if (!code) { msgEl.textContent = 'Please enter an Order ID.'; msgEl.classList.add('error'); return; }
+    if (!code.startsWith('TAN-')) code = 'TAN-' + code.replace(/^TAN-?/, '');
+
+    if (!currentUser) {
+      msgEl.textContent = 'Please log in to track your order.';
+      msgEl.classList.add('info');
+      return;
+    }
+
+    msgEl.textContent = 'Searching…';
+    msgEl.classList.add('info');
+
+    const isAdminUser = currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    // Customers can only ever match their own orders — the query itself is
+    // scoped to customerId == their uid, which is also what Firestore's
+    // security rules require in order to allow the read. Admin can look
+    // up any order number without that extra constraint.
+    const q = isAdminUser
+      ? query(collection(db, 'orders'), where('orderNumber', '==', code))
+      : query(collection(db, 'orders'), where('orderNumber', '==', code), where('customerId', '==', currentUser.uid));
+
+    // Live listener — if the admin updates this order's status while the
+    // customer is sitting on this page, it updates automatically, no
+    // refresh needed.
+    trackUnsubscribe = onSnapshot(q, (snap) => {
+      if (snap.empty) {
+        msgEl.textContent = '❌ Order not found. Please check your Order ID.';
+        msgEl.classList.remove('info');
+        msgEl.classList.add('error');
+        resultEl.style.display = 'none';
+        return;
+      }
+
+      const o = snap.docs[0].data();
+      msgEl.textContent = '';
+
+      const itemsHTML = (o.items || []).map(i => `<div>${escapeHtml(i.name)} × ${i.qty}</div>`).join('');
+
+      resultEl.innerHTML = `
+        ${timelineHTML(o)}
+        <div class="order-info-card">
+          <div class="order-info-row"><span class="k">Order ID</span><span class="v">${escapeHtml(o.orderNumber || code)}</span></div>
+          <div class="order-info-row"><span class="k">Order Date</span><span class="v">${formatDateTime(o.createdAt)}</span></div>
+          <div class="order-info-row"><span class="k">Customer</span><span class="v">${escapeHtml(o.customerName || o.customerEmail || '—')}</span></div>
+          <div class="order-info-row"><span class="k">Items</span><span class="v order-info-items">${itemsHTML}</span></div>
+          <div class="order-info-row"><span class="k">Total Amount</span><span class="v">₹${num(o.total)}</span></div>
+          <div class="order-info-row"><span class="k">Payment</span><span class="v">${escapeHtml(o.paymentStatus || 'pending')}</span></div>
+          <div class="order-info-row"><span class="k">Current Status</span><span class="v">${escapeHtml(STATUS_KEY_TO_LABEL[o.status] || o.status || 'Payment Pending')}</span></div>
+          ${deliveryInfoHTML(o)}
+        </div>
+      `;
+      resultEl.style.display = 'block';
+    }, (err) => {
+      console.error(err);
+      msgEl.textContent = '❌ Order not found. Please check your Order ID.';
+      msgEl.classList.remove('info');
+      msgEl.classList.add('error');
+      resultEl.style.display = 'none';
+    });
+  };
+  document.getElementById('trackOrderInput').addEventListener('keydown', e => { if (e.key === 'Enter') trackOrder(); });
+
+  /* ============ LOGIN BUTTON / ACCOUNT DROPDOWN / AUTH STATE ============ */
+  const loginBtn = document.getElementById('loginBtn');
+  const accountDropdown = document.getElementById('accountDropdown');
+
+  window.closeAccountDropdown = function closeAccountDropdown() {
+    accountDropdown.classList.remove('open');
+  };
+
+  // Note: the actual sign-out now lives in performLogout() above (with a
+  // confirmation step first, per Settings requirements) — used by both
+  // the header dropdown's Logout button and the one inside Settings.
+
+  checkUser((user) => {
+    currentUser = user;
+    if (user) {
+      loginBtn.innerHTML = '🧑<span class="logged-badge" id="loginBadge"></span>';
+      loginBtn.title = `Logged in as ${user.displayName || user.email}`;
+    } else {
+      loginBtn.innerHTML = '👤<span class="logged-badge" id="loginBadge" style="display:none"></span>';
+      loginBtn.title = 'Log in';
+      closeAccountDropdown(); // e.g. logged out in another tab
+    }
+  });
+
+  loginBtn.addEventListener('click', (e) => {
+    if (currentUser) {
+      e.stopPropagation();
+      accountDropdown.classList.toggle('open');
+    } else {
+      window.location.href = 'login.html';
+    }
+  });
+
+  // Close the dropdown on an outside click, without interfering with any
+  // other click-outside-to-close modal logic already on the page.
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('accountMenu').contains(e.target)) closeAccountDropdown();
+  });
+
+
+  /* ============ TOAST ============ */
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+  window.showToast = showToast;
+
+  /* ============ HELPERS ============ */
+  function num(v) { return v === undefined || v === null || v === '' ? 0 : v; }
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  /* ============ SCROLL FADE-IN ============ */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  /* Initialize badges from localStorage on first load */
+  saveCart(getCart());
+  saveWishlist(getWishlist());
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeQuickView(); closeCartModal(); closeWishlistModal(); closeOrdersModal(); closeAccountDropdown();
+      closeLogoutConfirm(); closeSettingsModal();
+      if (window.location.hash.startsWith('#offer/')) navigateBack();
+    }
+  });
+</script>
+</body>
+</html>
