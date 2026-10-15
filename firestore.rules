@@ -1,1 +1,74 @@
+rules_version = '2';
 
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'tanirascollection@gmail.com';
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /customers/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+      allow read: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow create: if isSignedIn()
+        && request.resource.data.keys().hasAll([
+             'orderNumber','customerId','customerEmail','items','subtotal',
+             'discount','total','address','utr','paymentMethod',
+             'paymentStatus','status','createdAt'])
+        && request.resource.data.keys().hasOnly([
+             'orderNumber','customerId','customerEmail','customerName','items',
+             'subtotal','discount','total','address','customerPhone',
+             'receiverName','altPhone','shippingAddress','utr','paymentMethod',
+             'paymentStatus','status','createdAt','estimatedDeliveryAt',
+             'deliveredAt','statusHistory','couponCode'])
+        && request.resource.data.customerId == request.auth.uid
+        && request.resource.data.customerEmail == request.auth.token.email
+        && request.resource.data.paymentStatus == 'Pending Verification'
+        && request.resource.data.status == 'Placed'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.deliveredAt == null
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 50
+        && request.resource.data.subtotal is number
+        && request.resource.data.discount is number
+        && request.resource.data.total is number
+        && request.resource.data.subtotal > 0
+        && request.resource.data.discount >= 0
+        && request.resource.data.total >= 0
+        && request.resource.data.total == request.resource.data.subtotal - request.resource.data.discount
+        && request.resource.data.utr is string
+        && request.resource.data.utr.size() >= 6
+        && request.resource.data.utr.size() <= 40
+        && request.resource.data.address is string
+        && request.resource.data.address.size() <= 600;
+
+      allow read: if isSignedIn()
+        && (resource.data.customerId == request.auth.uid || isAdmin());
+
+      allow update, delete: if isAdmin();
+    }
+
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /counters/{counterId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
