@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taneera's — Discover Beautiful Handmade Creations</title>
+<title>Taneeraa's — Discover Beautiful Handmade Creations</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23C29D5E'/%3E%3Ctext x='50' y='69' font-size='60' text-anchor='middle' fill='white' font-family='serif' font-style='italic'%3ET%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -356,7 +356,7 @@
 </style>
 
 <!-- ==========================================================
-     Taneera's — visual upgrade layer (merged inline; overrides the block above)
+     Taneeraa's — visual upgrade layer (merged inline; overrides the block above)
      ========================================================== -->
 <style>
 :root{
@@ -545,6 +545,15 @@ footer{background:var(--forest)}
 .addr-field input,.addr-field select{width:100%;border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;font-family:inherit;background:#fff;color:var(--text);box-sizing:border-box}
 .addr-field input:focus,.addr-field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(176,141,87,.18)}
 .addr-field.bad input,.addr-field.bad select{border-color:#DC2626}
+
+/* ---- Track-order header icon ---- */
+.track-btn{color:#9C7A44}
+.track-btn:hover{background:var(--gold);color:var(--forest)}
+.track-ping{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(194,157,94,.6);animation:trackPing 2.4s infinite}
+@keyframes trackPing{0%{box-shadow:0 0 0 0 rgba(194,157,94,.55)}70%{box-shadow:0 0 0 9px rgba(194,157,94,0)}100%{box-shadow:0 0 0 0 rgba(194,157,94,0)}}
+#track-order.track-flash .track-card{animation:trackGlow 1.8s ease}
+@keyframes trackGlow{0%,100%{box-shadow:0 10px 30px rgba(63,74,56,.08)}30%{box-shadow:0 0 0 4px rgba(194,157,94,.55),0 18px 44px rgba(63,74,56,.18)}}
+@media(prefers-reduced-motion:reduce){.track-ping{animation:none}}
 </style>
 </head>
 <body>
@@ -554,6 +563,7 @@ footer{background:var(--forest)}
   <defs>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
     <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9-9.5C2 7.8 4 5 7 5c2 0 3.7 1.2 5 3 1.3-1.8 3-3 5-3 3 0 5 2.8 4 6-1.5 4.9-9 9.5-9 9.5z"/></symbol>
+    <symbol id="i-track" viewBox="0 0 24 24"><path d="M12 21.500s-6.500-5.600-6.500-11a6.500 6.500 0 0 1 13 0c0 5.400-6.500 11-6.500 11z"/><circle cx="12" cy="10.500" r="2.400"/></symbol>
     <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></symbol>
     <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h11l2-8H6"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
@@ -577,7 +587,7 @@ footer{background:var(--forest)}
   <div class="container nav-wrap">
     <a href="#home" class="logo">
       <span class="logo-mark">T</span>
-      <span class="logo-text">Taneera<em>'s</em></span>
+      <span class="logo-text">Taneeraa<em>'s</em></span>
     </a>
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search handmade jewelry, decor, gifts...">
@@ -600,6 +610,7 @@ footer{background:var(--forest)}
         </div>
       </div>
       <button class="icon-btn" onclick="openWishlistModal()" aria-label="Wishlist" title="Wishlist"><svg class="ic"><use href="#i-heart"/></svg><span class="count-badge" id="wishBadge">0</span></button>
+      <button class="icon-btn track-btn" onclick="goToTrackOrder()" title="Track your order" aria-label="Track your order"><svg class="ic"><use href="#i-track"/></svg><span class="track-ping" aria-hidden="true"></span></button>
       <button class="icon-btn" onclick="openOrdersModal()" title="My Orders" aria-label="My Orders"><svg class="ic"><use href="#i-box"/></svg></button>
       <button class="icon-btn" onclick="openCartModal()" aria-label="Cart" title="Cart"><svg class="ic"><use href="#i-cart"/></svg><span class="count-badge" id="cartBadge">0</span></button>
       <button class="menu-toggle" onclick="document.getElementById('mobilePanel').classList.toggle('open')">☰</button>
@@ -616,6 +627,7 @@ footer{background:var(--forest)}
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
     <a href="#" onclick="event.preventDefault(); openOrdersModal()">My Orders</a>
+    <a href="#track-order" onclick="event.preventDefault(); document.getElementById('mobilePanel').classList.remove('open'); goToTrackOrder()">Track Order</a>
     <a href="#" onclick="event.preventDefault(); openSettingsModal()">⚙️ Settings</a>
   </div>
 </header>
@@ -624,7 +636,7 @@ footer{background:var(--forest)}
 <section class="hero" id="home">
   <div class="container hero-grid">
     <div class="hero-copy fade-in">
-      <span class="eyebrow">Taneera's · Handcrafted Since Day One</span>
+      <span class="eyebrow">Taneeraa's · Handcrafted Since Day One</span>
       <h1>Handmade,<br><span class="gold">made with love</span></h1>
       <p>Unique handcrafted jewelry and décor designed with love, creativity, and carefully selected materials to make every moment special.</p>
       <div class="hero-btns">
@@ -720,9 +732,9 @@ footer{background:var(--forest)}
         <div class="about-badge"><strong>100%</strong><span>Handmade</span></div>
       </div>
       <div class="about-copy fade-in">
-        <span class="eyebrow">About Taneera's</span>
+        <span class="eyebrow">About Taneeraa's</span>
         <h2 class="about-title">Crafted by Hand,<br>Made with Intention</h2>
-        <p class="about-text">Taneera's creates handcrafted jewelry and décor with close attention to detail and individuality — every piece chosen and assembled with care, nothing mass-produced.</p>
+        <p class="about-text">Taneeraa's creates handcrafted jewelry and décor with close attention to detail and individuality — every piece chosen and assembled with care, nothing mass-produced.</p>
         <ul class="about-points">
           <li><svg class="ic"><use href="#i-check"/></svg><div><b>Made piece by piece</b><span>Every design is assembled by hand, so no two are exactly alike.</span></div></li>
           <li><svg class="ic"><use href="#i-check"/></svg><div><b>Carefully selected materials</b><span>Anti-tarnish finishes and quality beads, stones and pearls.</span></div></li>
@@ -808,7 +820,7 @@ footer{background:var(--forest)}
     <div class="faq-list fade-in">
       <details class="faq-item">
         <summary>Can I cancel or get a refund on my order?</summary>
-        <p>No — Taneera's follows a strict No Refund Policy. Once payment is confirmed, the order is final, so please double-check your order details before completing payment. See our <a href="refund-policy.html" style="color:var(--primary)">Refund Policy</a> for details.</p>
+        <p>No — Taneeraa's follows a strict No Refund Policy. Once payment is confirmed, the order is final, so please double-check your order details before completing payment. See our <a href="refund-policy.html" style="color:var(--primary)">Refund Policy</a> for details.</p>
       </details>
       <details class="faq-item">
         <summary>Can I exchange a product after delivery?</summary>
@@ -850,7 +862,7 @@ footer{background:var(--forest)}
     <div>
       <div class="footer-logo">
         <span class="logo-mark">T</span>
-        <span class="logo-text">Taneera<em>'s</em></span>
+        <span class="logo-text">Taneeraa<em>'s</em></span>
       </div>
       <p style="font-size:13.5px;max-width:300px">A marketplace connecting independent artisans with people who love handmade, one-of-a-kind products.</p>
       <div class="footer-contact">
@@ -877,7 +889,7 @@ footer{background:var(--forest)}
       <ul><li><a href="#faq">FAQ</a></li><li><a href="#shipping">Shipping Info</a></li><li><a href="#track-order">Track Order</a></li></ul>
     </div>
   </div>
-  <div class="footer-bottom">© 2026 Taneera's. All rights reserved. · <a href="admin.html" style="color:inherit;opacity:.8">Admin</a></div>
+  <div class="footer-bottom">© 2026 Taneeraa's. All rights reserved. · <a href="admin.html" style="color:inherit;opacity:.8">Admin</a></div>
 </footer>
 
 <!-- ===================== QUICK VIEW MODAL ===================== -->
@@ -936,6 +948,26 @@ footer{background:var(--forest)}
 <p id="addressError" style="color:var(--primary);font-size:12.5px;margin-top:10px;display:none"></p>
 
       <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border)">
+        <div style="font-size:12.5px;font-weight:700;letter-spacing:.03em;color:var(--text-2);text-transform:uppercase;margin-bottom:2px">Order Summary</div>
+        <div style="margin-top:16px">
+          <label for="modalCouponInput" style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px">Coupon Code</label>
+          <div id="modalCouponRow" style="display:flex;gap:8px">
+            <input type="text" id="modalCouponInput" placeholder="Enter coupon code" style="flex:1;border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;font-family:inherit;text-transform:uppercase;box-sizing:border-box">
+            <button type="button" onclick="applyModalCoupon()" style="border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;padding:0 18px;font-size:12.5px;font-weight:700;cursor:pointer">Apply</button>
+          </div>
+          <p id="modalCouponMsg" style="font-size:12px;margin-top:6px;min-height:16px"></p>
+        </div>
+        <div style="margin-top:6px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:10px;font-size:13px">
+          <div style="display:flex;justify-content:space-between;color:var(--text-2)"><span>Subtotal</span><span id="addressSubtotal">₹0</span></div>
+          <div id="addressDiscountRow" style="display:none;justify-content:space-between;color:var(--success);font-weight:600;margin-top:6px"><span id="addressDiscountLabel"></span><span id="addressDiscountAmt"></span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)">
+            <span style="color:var(--text-2);font-size:13.5px">Amount to Pay</span>
+            <span id="addressOrderTotal" style="font-weight:700;font-size:21px;color:var(--navy)">₹0</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border)">
         <div style="font-size:12.5px;font-weight:700;letter-spacing:.03em;color:var(--text-2);text-transform:uppercase;margin-bottom:10px">Payment Method</div>
         <div style="border:1.5px solid var(--primary);background:rgba(228,33,40,.04);border-radius:12px;padding:16px;text-align:center">
           <div style="font-weight:700;font-size:15px;color:#5F259F;margin-bottom:2px">💜 PhonePe</div>
@@ -956,16 +988,13 @@ footer{background:var(--forest)}
             <ol style="margin:0 0 0 18px;padding:0;font-size:11.5px;color:var(--text-2);line-height:1.8">
               <li>Open PhonePe or any UPI app.</li>
               <li>Scan the QR code above.</li>
-              <li>Pay the exact order amount shown below.</li>
+              <li>Pay the exact Amount to Pay shown in the Order Summary above.</li>
               <li>After completing payment, return to this website.</li>
               <li>Click "I've Paid — Place Order" below.</li>
             </ol>
           </div>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:13.5px">
-          <span style="color:var(--text-2)">Amount to Pay</span>
-          <span id="addressOrderTotal" style="font-weight:700;font-size:19px;color:var(--navy)">₹0</span>
-        </div>
+        
 
         <div style="margin-top:16px">
           <label for="utrInput" style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px">UPI Transaction / UTR Number</label>
@@ -1003,7 +1032,9 @@ footer{background:var(--forest)}
         <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">UTR / Reference No.</span><span style="font-weight:600" id="ocUtr"></span></div>
       </div>
 
-      <button class="btn-primary" style="width:100%;border:none;border-radius:10px;padding:12px;font-weight:600;cursor:pointer;color:#fff;background:var(--primary);margin-top:20px" onclick="closeOrderConfirmed()">Continue Shopping</button>
+      <a id="ocWhatsapp" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;border-radius:10px;padding:12px;font-weight:700;font-size:14px;color:#fff;background:#25D366;margin-top:20px">Send payment details on WhatsApp</a>
+      <p style="font-size:11.5px;color:var(--text-2);margin-top:8px">Tap the button, then press Send in WhatsApp so our team can verify your payment faster.</p>
+      <button class="btn-primary" style="width:100%;border:none;border-radius:10px;padding:12px;font-weight:600;cursor:pointer;color:#fff;background:var(--primary);margin-top:12px" onclick="closeOrderConfirmed()">Continue Shopping</button>
     </div>
   </div>
 </div>
@@ -1134,7 +1165,7 @@ footer{background:var(--forest)}
 </div>
 
 <!-- ===================== WHATSAPP FLOATING BUTTON ===================== -->
-<a class="wa-float" href="https://wa.me/919538162560?text=Hi%20Taneera's%2C%20I%20need%20help%20with%20an%20order" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+<a class="wa-float" href="https://wa.me/919538162560?text=Hi%20Taneeraa's%2C%20I%20need%20help%20with%20an%20order" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></svg>
 </a>
 
@@ -1745,6 +1776,68 @@ footer{background:var(--forest)}
     return Math.max(0, subtotal - discount);
   }
 
+  function computeTotals(items, coupon) {
+    const rows = items.map(({ id, qty }) => {
+      const p = PRODUCTS.find(x => x.id === id);
+      return p ? { id, price: Number(p.sellingPrice) || 0, qty } : null;
+    }).filter(Boolean);
+    const subtotal = rows.reduce((n, r) => n + r.price * r.qty, 0);
+    let discount = 0;
+    if (coupon) {
+      const eligible = rows.reduce((n, r) => isProductEligibleForCoupon(r.id, coupon) ? n + r.price * r.qty : n, 0);
+      discount = Math.round(eligible * coupon.discountPercentage / 100);
+    }
+    return { subtotal, discount, total: Math.max(0, subtotal - discount) };
+  }
+
+  function renderModalTotals() {
+    if (!pendingOrder) return;
+    const t = computeTotals(pendingOrder.items, pendingOrder.coupon);
+    const c = pendingOrder.coupon;
+    document.getElementById('addressSubtotal').textContent = `₹${t.subtotal}`;
+    document.getElementById('addressOrderTotal').textContent = `₹${t.total}`;
+    const row = document.getElementById('addressDiscountRow');
+    row.style.display = c && t.discount > 0 ? 'flex' : 'none';
+    if (c) {
+      document.getElementById('addressDiscountLabel').textContent = `Coupon ${c.code} (${c.discountPercentage}% off)`;
+      document.getElementById('addressDiscountAmt').textContent = `−₹${t.discount}`;
+    }
+    const rowEl = document.getElementById('modalCouponRow');
+    const msg = document.getElementById('modalCouponMsg');
+    if (c) {
+      rowEl.style.display = 'none';
+      msg.style.color = 'var(--success)';
+      msg.innerHTML = `✓ Coupon ${escapeHtml(c.code)} applied — you save ₹${t.discount}. <a href="#" onclick="event.preventDefault(); removeModalCoupon()" style="color:var(--primary);text-decoration:underline">Remove</a>`;
+    } else {
+      rowEl.style.display = 'flex';
+    }
+  }
+
+  window.applyModalCoupon = function applyModalCoupon() {
+    if (!pendingOrder) return;
+    const msg = document.getElementById('modalCouponMsg');
+    const code = (document.getElementById('modalCouponInput').value || '').trim().toUpperCase();
+    msg.style.color = 'var(--primary)';
+    if (!code) { msg.textContent = 'Please enter a coupon code.'; return; }
+    const coupon = COUPONS.find(c => c.code === code);
+    if (!coupon) { msg.textContent = '❌ Invalid or inactive coupon code.'; return; }
+    if (!pendingOrder.items.some(i => isProductEligibleForCoupon(i.id, coupon))) {
+      msg.textContent = '❌ This coupon is not valid for the product(s) in this order.';
+      return;
+    }
+    pendingOrder.coupon = coupon;
+    renderModalTotals();
+    showToast(`Coupon ${code} applied`);
+  };
+
+  window.removeModalCoupon = function removeModalCoupon() {
+    if (!pendingOrder) return;
+    pendingOrder.coupon = null;
+    document.getElementById('modalCouponInput').value = '';
+    document.getElementById('modalCouponMsg').textContent = '';
+    renderModalTotals();
+  };
+
   window.openAddressModal = async function openAddressModal() {
     ['adName','adHouse','adStreet','adLandmark','adCity','adPin','adState','adPhone','adAltPhone','utrInput']
       .forEach(id => { document.getElementById(id).value = ''; });
@@ -1760,8 +1853,9 @@ footer{background:var(--forest)}
       if (p.mobile) document.getElementById('adPhone').value = p.mobile;
     } catch (e) { /* prefill is optional */ }
 
-    const total = pendingOrder ? estimateDisplayTotal(pendingOrder.items, pendingOrder.coupon) : 0;
-    document.getElementById('addressOrderTotal').textContent = `₹${total}`;
+    document.getElementById('modalCouponInput').value = '';
+    document.getElementById('modalCouponMsg').textContent = '';
+    renderModalTotals();
     document.getElementById('confirmAddressBtn').textContent = `I've Paid — Place Order`;
     document.getElementById('addressOverlay').classList.add('open');
   };
@@ -1921,6 +2015,16 @@ footer{background:var(--forest)}
     document.getElementById('ocOrderDate').textContent = formatDDMMYYYY(new Date());
     document.getElementById('ocTotal').textContent = `₹${num(order.total)}`;
     document.getElementById('ocUtr').textContent = order.utr || '—';
+    const waLines = [
+      `Hello Taneeraa's, I have paid for my order.`,
+      `Order ID: ${order.orderNumber}`,
+      `Amount: ₹${order.total}` + (order.couponCode ? ` (coupon ${order.couponCode})` : ''),
+      `UTR: ${order.utr}`,
+      `Items: ` + (order.items || []).map(i => `${i.name} x${i.qty}`).join(', '),
+      `Name: ${order.receiverName || order.customerName || ''}`,
+      `Mobile: ${order.customerPhone || ''}`,
+    ];
+    document.getElementById('ocWhatsapp').href = 'https://wa.me/919538162560?text=' + encodeURIComponent(waLines.join('\n'));
     document.getElementById('ocProductsList').innerHTML = (order.items || []).map(i => `
       <div style="display:flex;align-items:center;gap:10px">
         <img src="${i.imageUrl || `https://placehold.co/60x60?text=${encodeURIComponent(i.name)}`}" alt="${escapeHtml(i.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0">
@@ -1965,30 +2069,46 @@ footer{background:var(--forest)}
       return;
     }
 
+    const couponNote = orderData.couponCode ? `\nCoupon ${orderData.couponCode}: -₹${orderData.discount}` : '';
+    const base = {
+      orderId: orderData.orderNumber,
+      orderDate: formatDDMMYYYY(new Date()),
+      products: formatProductsForEmail(orderData.items) + couponNote,
+      total: `₹${orderData.total}`,
+      utr: orderData.utr || '',
+      paymentMethod: 'UPI / PhonePe',
+      paymentStatus: 'Pending Verification',
+    };
+
+    // 1) Customer's confirmation
     try {
-      await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        {
-          email: orderData.customerEmail,
-          name: orderData.customerName || orderData.customerEmail,
-          title: 'Order Confirmation',
-          orderId: orderData.orderNumber,
-          orderDate: formatDDMMYYYY(new Date()),
-          products: formatProductsForEmail(orderData.items),
-          total: `₹${orderData.total}`,
-          address: orderData.address || '',
-          utr: orderData.utr || '',
-          paymentMethod: 'UPI / PhonePe',
-          paymentStatus: 'Pending Verification',
-        },
-        PUBLIC_KEY
-      );
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        ...base,
+        email: orderData.customerEmail,
+        name: orderData.customerName || orderData.customerEmail,
+        title: 'Order Confirmation',
+        address: orderData.address || '',
+      }, PUBLIC_KEY);
     } catch (err) {
-      // The order itself already succeeded (see startPayment above) — a
-      // failed email must never cancel or roll it back. Surface it quietly.
+      // The order itself already succeeded — a failed email must never roll it back.
       console.error('Order confirmation email failed to send:', err);
       showToast('Order placed successfully. Confirmation email could not be sent.');
+    }
+
+    // 2) Admin alert — same template, addressed to the shop owner, with contact details
+    try {
+      const contact = `${orderData.address || ''}\nMobile: ${orderData.customerPhone || '—'}` +
+        (orderData.altPhone ? `\nAlt mobile: ${orderData.altPhone}` : '') +
+        `\nCustomer email: ${orderData.customerEmail}`;
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        ...base,
+        email: ADMIN_EMAIL,
+        name: "Taneeraa's Admin",
+        title: 'NEW ORDER — verify payment in PhonePe (UTR ' + (orderData.utr || '—') + ')',
+        address: contact,
+      }, PUBLIC_KEY);
+    } catch (err) {
+      console.error('Admin order alert email failed to send:', err);
     }
   }
 
@@ -2004,9 +2124,12 @@ footer{background:var(--forest)}
     listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">Loading your orders…</p>`;
     document.getElementById('ordersOverlay').classList.add('open');
     try {
-      const q = query(collection(db, 'orders'), where('customerId', '==', currentUser.uid), orderBy('createdAt', 'desc'));
+      // No orderBy here: combining where() + orderBy() needs a Firestore composite index.
+      // We sort newest-first in the browser instead, so My Orders works without one.
+      const q = query(collection(db, 'orders'), where('customerId', '==', currentUser.uid));
       const snap = await getDocs(q);
-      const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => ((toDate(b.createdAt) || 0) - (toDate(a.createdAt) || 0)));
       MY_ORDERS = orders;
       if (!orders.length) {
         listEl.innerHTML = `<p style="color:var(--text-2);font-size:13.5px">You haven't placed any orders yet.</p>`;
@@ -2232,6 +2355,19 @@ footer{background:var(--forest)}
   // "Track Order" button on a My Orders card — closes the modal, fills in
   // the Track Order search box with this order's number, scrolls to it,
   // and runs the search immediately.
+  // Header "Track" icon: jump to the Track Your Order box, highlight it, focus the input.
+  window.goToTrackOrder = function goToTrackOrder() {
+    const hadOffer = window.location.hash.startsWith('#offer/');
+    if (hadOffer) window.location.hash = '';   // leave the offer page first
+    setTimeout(() => {
+      const sec = document.getElementById('track-order');
+      sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      sec.classList.add('track-flash');
+      setTimeout(() => sec.classList.remove('track-flash'), 1900);
+      setTimeout(() => document.getElementById('trackOrderInput').focus({ preventScroll: true }), 700);
+    }, hadOffer ? 80 : 0);
+  };
+
   window.trackFromMyOrders = function trackFromMyOrders(orderNumber) {
     closeOrdersModal();
     document.getElementById('trackOrderInput').value = orderNumber;
