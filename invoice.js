@@ -1,7 +1,7 @@
 // invoice.js
 // ============================================================
 // Shared invoice rendering + client-side PDF/print logic for
-// Taneera's — used by BOTH admin.js (Admin Dashboard) and the
+// Taneeraa — used by BOTH admin.js (Admin Dashboard) and the
 // customer "My Orders" view in index.html, so the invoice looks
 // identical no matter who opens it.
 //
@@ -15,7 +15,7 @@
 // ============================================================
 
 const BUSINESS = {
-  name: "Taneera",
+  name: "Taneeraa",
   supportEmail: "Tanirascollection@gmail.com",
   instagramHandle: "@tanee.raa",
   instagramUrl: "https://www.instagram.com/tanee.raa?utm_source=qr",
@@ -70,8 +70,8 @@ export function buildInvoiceHTML(order) {
     <!-- Header -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #B08D57;padding-bottom:18px;margin-bottom:24px;gap:16px;flex-wrap:wrap">
       <div>
-        <img src="assets/logo-icon.png" alt="Taneera" style="height:44px;width:auto;margin-bottom:6px" onerror="this.style.display='none'">
-        <div style="font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:22px;color:#3F4A38">Taneera</div>
+        <img src="assets/logo-icon.png" alt="Taneeraa" style="height:44px;width:auto;margin-bottom:6px" onerror="this.style.display='none'">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:22px;color:#3F4A38">Taneeraa</div>
         <div style="font-size:11px;color:#7A8571;margin-top:2px">Handmade &amp; Curated Jewellery</div>
       </div>
       <div style="text-align:right">
@@ -133,16 +133,16 @@ export function buildInvoiceHTML(order) {
 
     <!-- Footer -->
     <div style="text-align:center;border-top:1px solid #E5E7EB;padding-top:18px;font-size:12.5px;color:#6B7280">
-      <div style="margin-bottom:4px;color:#3F4A38;font-weight:600">Thank you for shopping with Taneera.</div>
+      <div style="margin-bottom:4px;color:#3F4A38;font-weight:600">Thank you for shopping with Taneeraa.</div>
       <div>Support: ${esc(BUSINESS.supportEmail)} &nbsp;·&nbsp; Instagram: ${esc(BUSINESS.instagramHandle)}</div>
     </div>
   </div>`;
 }
 
-/** Filename per spec: Taneera-Invoice-{invoiceNumber}.pdf */
+/** Filename per spec: Taneeraa-Invoice-{invoiceNumber}.pdf */
 export function invoiceFilename(order) {
   const safe = String(order.invoiceNumber || "UNKNOWN").replace(/[^A-Za-z0-9_-]/g, "");
-  return `Taneera-Invoice-${safe}.pdf`;
+  return `Taneeraa-Invoice-${safe}.pdf`;
 }
 
 /**
