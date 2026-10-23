@@ -30,5 +30,5 @@
 window.EMAILJS_CONFIG = {
   SERVICE_ID: "service_kh9fyvg",
   TEMPLATE_ID: "template_6lai5a7",
-  PUBLIC_KEY: "xxxxxxxxxxxxxxxx"
+  PUBLIC_KEY: "mk-CKOXVdRfOcaiZ_"
 };
