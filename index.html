@@ -1740,19 +1740,16 @@ footer{background:var(--forest)}
   let pendingOrder = null;   // { items, isFromCart, coupon } — collected before the address step
   let orderSubmitting = false; // guards against a double-click firing two orders/emails
 
+  // Guest checkout: no login needed. Both buttons open the full checkout page.
   window.buyNow = function buyNow(id) {
-    if (!currentUser) { alert('Please log in to continue.'); window.location.href = 'login.html'; return; }
-    pendingOrder = { items: [{ id, qty: 1 }], isFromCart: false, coupon: null };
-    openAddressModal();
+    window.location.href = 'checkout.html?buy=' + encodeURIComponent(id);
   };
 
   window.checkout = function checkout() {
-    if (!currentUser) { alert('Please log in to checkout.'); window.location.href = 'login.html'; return; }
     const cart = getCart();
-    const items = Object.keys(cart).map(id => ({ id, qty: cart[id] }));
-    if (!items.length) { showToast('Your cart is empty'); return; }
-    pendingOrder = { items, isFromCart: true, coupon: appliedCoupon };
-    openAddressModal();
+    if (!Object.keys(cart).length) { showToast('Your cart is empty'); return; }
+    if (appliedCoupon) sessionStorage.setItem('tan_coupon', appliedCoupon.code); else sessionStorage.removeItem('tan_coupon');
+    window.location.href = 'checkout.html';
   };
 
   // Computes the order total client-side from real Firestore product
@@ -2467,7 +2464,7 @@ footer{background:var(--forest)}
     if (!code.startsWith('TAN-')) code = 'TAN-' + code.replace(/^TAN-?/, '');
 
     if (!currentUser) {
-      msgEl.textContent = 'Please log in to track your order.';
+      msgEl.textContent = 'We could not find an order on this device. Please log in, or contact us on WhatsApp with your Order ID.';
       msgEl.classList.add('info');
       return;
     }
@@ -2538,9 +2535,9 @@ footer{background:var(--forest)}
   // the header dropdown's Logout button and the one inside Settings.
 
   checkUser((user) => {
-    currentUser = user;
+    currentUser = user;   // guests (anonymous) keep a user object so they can track their orders
     const badge = document.getElementById('loginBadge');
-    if (user) {
+    if (user && !user.isAnonymous) {
       // Keep the clean SVG profile icon; just show the green "logged in" dot.
       if (badge) badge.style.display = 'block';
       loginBtn.title = `Logged in as ${user.displayName || user.email}`;
@@ -2552,7 +2549,7 @@ footer{background:var(--forest)}
   });
 
   loginBtn.addEventListener('click', (e) => {
-    if (currentUser) {
+    if (currentUser && !currentUser.isAnonymous) {
       e.stopPropagation();
       accountDropdown.classList.toggle('open');
     } else {
