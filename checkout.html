@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Taneeraa</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23C29D5E'/%3E%3Ctext x='50' y='69' font-size='60' text-anchor='middle' fill='white' font-family='serif' font-style='italic'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#243020;--navy:#3F4A38;--gold:#C29D5E;--gold-d:#A98348;--cream:#FAF5EA;--blush:#F3E4D3;--border:#E3D9C4;--text:#2B3326;--text-2:#7A8571;--ok:#3E7A4A;--err:#C0392B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',sans-serif;color:var(--text);background:#fff;line-height:1.55}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.top{border-bottom:1px solid var(--border);background:var(--cream)}
+.top .in{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:700;color:var(--forest)}
+.logo i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),#9C7A44);color:#fff;font-size:21px;font-style:italic}
+.back{font-size:13.5px;color:var(--navy);font-weight:500}.back:hover{color:var(--gold-d)}
+.grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.15fr 1fr;min-height:calc(100vh - 66px)}
+.left{padding:34px 40px 60px 20px}
+.right{background:#F7F3EA;border-left:1px solid var(--border);padding:34px 20px 60px 40px}
+.sticky{position:sticky;top:20px;max-width:460px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.right{order:-1;border-left:0;border-bottom:1px solid var(--border);padding:22px 18px}.left{padding:24px 18px 50px}.sticky{position:static;max-width:none}}
+h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--forest);margin:0 0 14px}
+section{margin-bottom:30px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:560px){.row,.row3{grid-template-columns:1fr}}
+.f{position:relative;margin-bottom:12px}
+.f input,.f select{width:100%;height:56px;border:1px solid var(--border);border-radius:10px;padding:22px 14px 6px;font-size:15px;font-family:inherit;background:#fff;color:var(--text);appearance:none;-webkit-appearance:none}
+.f select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237A8571' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center}
+.f label{position:absolute;left:15px;top:17px;font-size:15px;color:var(--text-2);pointer-events:none;transition:.15s}
+.f input:focus+label,.f input:not(:placeholder-shown)+label,.f select+label{top:8px;font-size:11.5px}
+.f input:focus,.f select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,157,94,.2)}
+.f.bad input,.f.bad select{border-color:var(--err)}
+.f .msg{display:none;color:var(--err);font-size:12px;margin-top:4px}.f.bad .msg{display:block}
+.card{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+.opt{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;border-bottom:1px solid var(--border)}
+.opt:last-child{border-bottom:0}
+.opt input{accent-color:var(--navy);width:18px;height:18px}
+.opt.sel{background:#FBF6EA}
+.opt .t{flex:1;font-size:14.5px}.opt .t small{display:block;color:var(--text-2);font-size:12.5px}
+.opt b{font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chips span{font-size:10.5px;font-weight:700;border:1px solid var(--border);border-radius:5px;padding:2px 7px;background:#fff;color:var(--navy)}
+.panel{padding:18px;background:#FBF8F1;border-top:1px solid var(--border);display:none}.panel.show{display:block}
+.qr{background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px;max-width:260px;margin:0 auto 12px}.qr img{width:100%;height:auto;display:block}
+.upi{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;font-size:13.5px;margin-bottom:12px}
+.copy{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.steps{font-size:12.5px;color:var(--text-2);margin:0 0 14px 18px;line-height:1.8}
+.note{font-size:12.5px;color:var(--text-2);margin-top:8px}
+.pay{width:100%;height:56px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--navy),var(--forest));color:#fff;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(36,48,32,.25);transition:.15s}
+.pay:hover{transform:translateY(-1px)}.pay:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.err{display:none;margin-top:12px;background:#FDECEA;color:#8E2A20;border-radius:10px;padding:12px 14px;font-size:13.5px}.err.show{display:block}
+.lines{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.line{display:flex;align-items:center;gap:14px}
+.thumb{position:relative;width:64px;height:64px;flex-shrink:0}
+.thumb img{width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--border);background:#fff}
+.thumb b{position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;border-radius:50%;background:var(--forest);color:#fff;font-size:11.5px;display:grid;place-items:center;padding:0 4px}
+.line .n{flex:1;font-size:14px}.line .p{font-size:14px;font-weight:500}
+.cp{display:flex;gap:10px;margin-bottom:18px}
+.cp input{flex:1;height:50px;border:1px solid var(--border);border-radius:10px;padding:0 14px;font-size:14.5px;font-family:inherit;text-transform:uppercase;background:#fff}
+.cp input:focus{outline:none;border-color:var(--gold)}
+.cp button{height:50px;padding:0 20px;border-radius:10px;border:1px solid var(--navy);background:#fff;color:var(--navy);font-weight:600;cursor:pointer}
+.cpmsg{font-size:12.5px;margin:-10px 0 14px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:#E9F3EA;color:var(--ok);border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:600}
+.tag a{text-decoration:underline;color:var(--err);font-weight:500;cursor:pointer}
+.sum div.r{display:flex;justify-content:space-between;font-size:14.5px;padding:5px 0}
+.sum .disc{color:var(--ok)}
+.sum .tot{border-top:1px solid var(--border);margin-top:8px;padding-top:14px;align-items:baseline}
+.sum .tot span:first-child{font-size:19px;font-weight:600}.sum .tot b{font-size:26px;font-family:'Cormorant Garamond',serif}
+.sum .save{margin-top:6px;font-size:13px;color:var(--ok);font-weight:600}
+.empty,.done{max-width:620px;margin:60px auto;padding:0 20px;text-align:center}
+.done .box{text-align:left;border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:22px;background:#fff}
+.done .k{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:14px;border-bottom:1px dashed var(--border)}.done .k:last-child{border:0}
+.done .k span:first-child{color:var(--text-2)}
+.check{width:64px;height:64px;border-radius:50%;background:#E3F1E5;color:var(--ok);display:grid;place-items:center;font-size:32px;margin:0 auto 14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:14px;font-weight:600;font-size:15px;border:1px solid var(--navy);color:var(--navy);background:#fff;cursor:pointer;margin-top:12px}
+.btn.wa{background:#25D366;border-color:#25D366;color:#fff}.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--forest)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="top"><div class="in">
+  <a class="logo" href="index.html"><i>T</i>Taneeraa</a>
+  <a class="back" href="index.html">← Continue shopping</a>
+</div></div>
+
+<div class="empty" id="emptyState" hidden>
+  <h2>Your cart is empty</h2>
+  <p style="color:var(--text-2);margin-bottom:18px">Add something beautiful first, then come back to check out.</p>
+  <a class="btn gold" href="index.html#products">Browse products</a>
+</div>
+
+<div class="grid" id="checkoutGrid" hidden>
+  <form class="left" id="coForm" novalidate>
+    <section>
+      <h2>Contact</h2>
+      <div class="f" data-f="email"><input id="email" type="email" placeholder=" " autocomplete="email"><label for="email">Email (for your order confirmation)</label><div class="msg"></div></div>
+      <div class="f" data-f="phone"><input id="phone" type="tel" inputmode="numeric" placeholder=" " autocomplete="tel"><label for="phone">Mobile number</label><div class="msg"></div></div>
+    </section>
+
+    <section>
+      <h2>Delivery</h2>
+      <div class="f"><select id="country" disabled><option>India</option></select><label>Country / Region</label></div>
+      <div class="row">
+        <div class="f" data-f="fname"><input id="fname" placeholder=" " autocomplete="given-name"><label for="fname">First name</label><div class="msg"></div></div>
+        <div class="f" data-f="lname"><input id="lname" placeholder=" " autocomplete="family-name"><label for="lname">Last name</label><div class="msg"></div></div>
+      </div>
+      <div class="f" data-f="address"><input id="address" placeholder=" " autocomplete="address-line1"><label for="address">House / flat no., street, area</label><div class="msg"></div></div>
+      <div class="f"><input id="apt" placeholder=" " autocomplete="address-line2"><label for="apt">Apartment, suite, etc. (optional)</label></div>
+      <div class="f"><input id="landmark" placeholder=" "><label for="landmark">Landmark (optional)</label></div>
+      <div class="row3">
+        <div class="f" data-f="city"><input id="city" placeholder=" " autocomplete="address-level2"><label for="city">City</label><div class="msg"></div></div>
+        <div class="f" data-f="state"><select id="state" autocomplete="address-level1"></select><label for="state">State</label><div class="msg"></div></div>
+        <div class="f" data-f="pin"><input id="pin" inputmode="numeric" maxlength="6" placeholder=" " autocomplete="postal-code"><label for="pin">PIN code</label><div class="msg"></div></div>
+      </div>
+      <div class="f" data-f="alt"><input id="alt" type="tel" inputmode="numeric" placeholder=" "><label for="alt">Alternate mobile (optional)</label><div class="msg"></div></div>
+    </section>
+
+    <section>
+      <h2>Shipping method</h2>
+      <div class="card"><label class="opt sel"><input type="radio" checked disabled><span class="t">Standard<small>Delivery in 3–7 business days</small></span><b id="shipPrice">₹100.00</b></label></div>
+    </section>
+
+    <section>
+      <h2>Payment</h2>
+      <p class="note" style="margin:-8px 0 12px">All transactions are secure.</p>
+      <div class="card" id="payCard">
+        <div id="optRzp" hidden>
+          <label class="opt sel"><input type="radio" name="pay" value="razorpay" checked><span class="t">Razorpay Secure<small>UPI, Cards, Net Banking, Wallets</small></span><span class="chips"><span>UPI</span><span>VISA</span><span>MASTERCARD</span><span>+more</span></span></label>
+          <div class="panel show" id="panelRzp"><p style="font-size:13.5px;color:var(--text-2)">You will pay in a secure Razorpay window, without leaving this page.</p></div>
+        </div>
+        <div>
+          <label class="opt" id="optUpiLabel"><input type="radio" name="pay" value="upi"><span class="t">UPI QR (PhonePe)<small>Scan, pay, then enter your UTR number</small></span><span class="chips"><span>PhonePe</span><span>UPI</span></span></label>
+          <div class="panel" id="panelUpi">
+            <div class="qr"><img src="phonepe-qr.jpeg" alt="PhonePe payment QR code"></div>
+            <div class="upi"><span>UPI ID: <b>9538162560@ybl</b></span><button type="button" class="copy" id="copyUpi">Copy UPI ID</button></div>
+            <ol class="steps"><li>Open PhonePe or any UPI app and scan the QR.</li><li>Pay the exact <b>Total</b> shown in your order summary.</li><li>Enter the UTR / transaction number below.</li></ol>
+            <div class="f" data-f="utr" style="margin:0"><input id="utr" placeholder=" " autocomplete="off"><label for="utr">UTR / transaction reference number</label><div class="msg"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <button class="pay" id="payBtn" type="submit">Pay now</button>
+    <div class="err" id="errBox"></div>
+    <p class="note" style="text-align:center;margin-top:14px">No account needed. By placing your order you agree to our <a href="terms.html" style="text-decoration:underline">Terms</a> and <a href="refund-policy.html" style="text-decoration:underline">Refund Policy</a>.</p>
+  </form>
+
+  <aside class="right"><div class="sticky">
+    <div class="lines" id="lines"></div>
+    <div class="cp" id="cpRow"><input id="cpInput" placeholder="Discount code"><button type="button" id="cpBtn">Apply</button></div>
+    <div class="cpmsg" id="cpMsg"></div>
+    <div class="sum" id="sum"></div>
+  </div></aside>
+</div>
+
+<div class="done" id="done" hidden>
+  <div class="check">✓</div>
+  <h2 style="margin-bottom:6px">Thank you! Your order is placed</h2>
+  <p style="color:var(--text-2)">We will verify your payment and update you by email.</p>
+  <div class="box" id="doneBox"></div>
+  <a class="btn wa" id="waBtn" target="_blank" rel="noopener">Send payment details on WhatsApp</a>
+  <a class="btn" href="index.html#track-order">Track your order</a>
+  <a class="btn gold" href="index.html">Continue shopping</a>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="emailjs-config.js"></script>
+<script src="razorpay-config.js" onerror="void 0"></script>
+
+<script type="module">
+import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
+import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { collection, getDocs, addDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const SHIPPING_FEE = 100;          // standard shipping, in rupees
+const FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this
+const DELIVERY_DAYS = 5;
+const WHATSAPP = "919538162560";
+const STATES = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = (n) => "₹" + Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const params = new URLSearchParams(location.search);
+const buyId = params.get("buy");
+const fromCart = !buyId;
+let PRODUCTS = [], COUPONS = [], coupon = null, items = [], busy = false;
+
+$("state").innerHTML = '<option value=""></option>' + STATES.map(s => `<option>${s}</option>`).join("");
+const rzpKey = (window.RAZORPAY_CONFIG && window.RAZORPAY_CONFIG.KEY_ID) || "";
+const rzpReady = /^rzp_(test|live)_/.test(rzpKey) && typeof Razorpay !== "undefined";
+if (rzpReady) $("optRzp").hidden = false; else $("optUpiLabel").querySelector("input").checked = true;
+
+function pay() { return document.querySelector('input[name="pay"]:checked').value; }
+function syncPay() {
+  const m = pay();
+  $("panelUpi").classList.toggle("show", m === "upi");
+  $("optUpiLabel").classList.toggle("sel", m === "upi");
+  if (rzpReady) { $("optRzp").querySelector(".opt").classList.toggle("sel", m === "razorpay"); $("panelRzp").classList.toggle("show", m === "razorpay"); }
+  renderPayBtn();
+}
+document.querySelectorAll('input[name="pay"]').forEach(r => r.addEventListener("change", syncPay));
+
+/* ---------- load data ---------- */
+async function load() {
+  try {
+    const [ps, cs] = await Promise.all([getDocs(collection(db, "products")), getDocs(collection(db, "coupons"))]);
+    PRODUCTS = ps.docs.map(d => ({ id: d.id, ...d.data() }));
+    COUPONS = cs.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.active);
+  } catch (e) { console.error(e); showErr("Could not load your cart. Please check your connection and refresh."); }
+  let raw = [];
+  if (buyId) raw = [{ id: buyId, qty: 1 }];
+  else { try { const c = JSON.parse(localStorage.getItem("tan_cart") || "{}"); raw = Object.keys(c).map(id => ({ id, qty: c[id] })); } catch {} }
+  items = raw.map(r => ({ p: PRODUCTS.find(x => x.id === r.id), qty: r.qty })).filter(r => r.p);
+  if (!items.length) { $("emptyState").hidden = false; return; }
+  const saved = sessionStorage.getItem("tan_coupon");
+  if (saved) { const c = COUPONS.find(x => x.code === saved); if (c) coupon = c; }
+  $("checkoutGrid").hidden = false;
+  syncPay(); renderSummary();
+}
+
+/* ---------- totals ---------- */
+const eligible = (p, c) => c && (c.appliesToAllProducts || (c.productIds || []).includes(p.id));
+function totals() {
+  const subtotal = items.reduce((n, i) => n + (Number(i.p.sellingPrice) || 0) * i.qty, 0);
+  let discount = 0;
+  if (coupon) {
+    const el = items.reduce((n, i) => eligible(i.p, coupon) ? n + (Number(i.p.sellingPrice) || 0) * i.qty : n, 0);
+    discount = Math.round(el * coupon.discountPercentage / 100);
+  }
+  const after = Math.max(0, subtotal - discount);
+  const shipping = after > FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
+  return { subtotal, discount, shipping, total: after + shipping };
+}
+function renderSummary() {
+  const t = totals();
+  $("lines").innerHTML = items.map(i => `<div class="line"><div class="thumb"><img src="${esc(i.p.imageUrl || "https://placehold.co/100x100?text=" + encodeURIComponent(i.p.name || ""))}" alt=""><b>${i.qty}</b></div><div class="n">${esc(i.p.name)}</div><div class="p">${money((Number(i.p.sellingPrice) || 0) * i.qty)}</div></div>`).join("");
+  $("cpRow").hidden = !!coupon;
+  $("cpMsg").innerHTML = coupon ? `<span class="tag">🏷️ ${esc(coupon.code)} applied <a id="cpRemove">Remove</a></span>` : "";
+  if (coupon) $("cpRemove").onclick = () => { coupon = null; sessionStorage.removeItem("tan_coupon"); renderSummary(); };
+  $("sum").innerHTML =
+    `<div class="r"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>` +
+    (coupon && t.discount ? `<div class="r disc"><span>Order discount (${esc(coupon.code)})</span><span>− ${money(t.discount)}</span></div>` : "") +
+    `<div class="r"><span>Shipping</span><span>${t.shipping ? money(t.shipping) : "FREE"}</span></div>` +
+    `<div class="r tot"><span>Total</span><span><small style="font-size:12px;color:var(--text-2);margin-right:6px">INR</small><b>${money(t.total)}</b></span></div>` +
+    (t.discount ? `<div class="save">🏷️ TOTAL SAVINGS ${money(t.discount)}</div>` : "");
+  $("shipPrice").textContent = t.shipping ? money(t.shipping) : "FREE";
+  renderPayBtn();
+}
+function renderPayBtn() {
+  if (!items.length) return;
+  $("payBtn").textContent = pay() === "razorpay" ? `Pay now · ${money(totals().total)}` : "I've Paid — Place Order";
+}
+$("cpBtn").onclick = () => {
+  const code = $("cpInput").value.trim().toUpperCase(), msg = $("cpMsg");
+  msg.style.color = "var(--err)";
+  if (!code) { msg.textContent = "Enter a discount code."; return; }
+  const c = COUPONS.find(x => x.code === code);
+  if (!c) { msg.textContent = "Invalid or inactive discount code."; return; }
+  if (!items.some(i => eligible(i.p, c))) { msg.textContent = "This code does not apply to the items in your order."; return; }
+  coupon = c; sessionStorage.setItem("tan_coupon", c.code); $("cpInput").value = ""; msg.style.color = ""; renderSummary();
+};
+$("cpInput").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("cpBtn").click(); } });
+$("copyUpi").onclick = () => navigator.clipboard.writeText("9538162560@ybl").then(() => { $("copyUpi").textContent = "Copied!"; setTimeout(() => $("copyUpi").textContent = "Copy UPI ID", 1600); }).catch(() => alert("UPI ID: 9538162560@ybl"));
+
+/* ---------- validation ---------- */
+function setErr(key, text) {
+  const box = document.querySelector(`[data-f="${key}"]`);
+  box.classList.toggle("bad", !!text);
+  const m = box.querySelector(".msg"); if (m) m.textContent = text || "";
+}
+function readForm() {
+  const v = (id) => $(id).value.trim();
+  const digits = (s) => s.replace(/[\s-]/g, "").replace(/^\+?91/, "");
+  return { email: v("email"), phone: digits(v("phone")), fname: v("fname"), lname: v("lname"), address: v("address"), apt: v("apt"), landmark: v("landmark"), city: v("city"), state: v("state"), pin: v("pin"), alt: digits(v("alt")), utr: v("utr") };
+}
+function validate(f) {
+  const rules = [
+    ["email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email), "Enter a valid email address."],
+    ["phone", /^[6-9]\d{9}$/.test(f.phone), "Enter a valid 10-digit mobile number."],
+    ["fname", f.fname.length >= 2, "Enter your first name."],
+    ["lname", f.lname.length >= 1, "Enter your last name."],
+    ["address", f.address.length >= 5, "Enter your house number, street and area."],
+    ["city", !!f.city, "Enter your city."],
+    ["state", !!f.state, "Select your state."],
+    ["pin", /^[1-9]\d{5}$/.test(f.pin), "Enter a valid 6-digit PIN code."],
+    ["alt", !f.alt || /^[6-9]\d{9}$/.test(f.alt), "Alternate mobile must be 10 digits, or leave it empty."],
+  ];
+  if (pay() === "upi") rules.push(["utr", /^[A-Za-z0-9]{8,30}$/.test(f.utr), "Enter the UTR / transaction number from your payment."]);
+  let first = null;
+  for (const [k, ok, msg] of rules) { setErr(k, ok ? "" : msg); if (!ok && !first) first = k; }
+  if (!pay() || pay() !== "upi") setErr("utr", "");
+  if (first) document.getElementById(first === "state" ? "state" : first).focus();
+  return !first;
+}
+document.querySelectorAll(".f input,.f select").forEach(el => el.addEventListener("input", () => { const b = el.closest(".f"); if (b && b.classList.contains("bad")) b.classList.remove("bad"); }));
+function showErr(t) { const b = $("errBox"); b.textContent = t || ""; b.classList.toggle("show", !!t); if (t) b.scrollIntoView({ behavior: "smooth", block: "center" }); }
+
+/* ---------- placing the order ---------- */
+async function ensureUser() {
+  await auth.authStateReady();
+  if (auth.currentUser) return auth.currentUser;
+  try { return (await signInAnonymously(auth)).user; }
+  catch (e) { console.error(e); throw new Error("Guest checkout is not switched on yet. (Firebase → Authentication → Sign-in method → Anonymous must be enabled.)"); }
+}
+function orderNumber() { return "TAN-" + Math.floor(10000 + Math.random() * 89999); }
+
+async function saveOrder(f, method, ref) {
+  const user = await ensureUser();
+  const t = totals();
+  const lines = items.map(i => ({ productId: i.p.id, name: i.p.name, price: Number(i.p.sellingPrice) || 0, qty: i.qty, imageUrl: i.p.imageUrl || "" }));
+  const fullName = (f.fname + " " + f.lname).trim();
+  const addressText = [fullName, f.address + (f.apt ? ", " + f.apt : ""), f.landmark ? "Landmark: " + f.landmark : "", `${f.city}, ${f.state} - ${f.pin}`].filter(Boolean).join("\n");
+  const data = {
+    orderNumber: orderNumber(), customerId: user.uid, customerEmail: f.email, customerName: fullName, receiverName: fullName,
+    items: lines, subtotal: t.subtotal, discount: t.discount, shippingCost: t.shipping, shippingMethod: "Standard", total: t.total,
+    address: addressText, customerPhone: f.phone, altPhone: f.alt || "",
+    shippingAddress: { house: f.address, street: f.apt || "", landmark: f.landmark || "", city: f.city, state: f.state, pin: f.pin },
+    utr: ref, paymentMethod: method, paymentStatus: "Pending Verification", status: "Placed",
+    createdAt: serverTimestamp(), estimatedDeliveryAt: Timestamp.fromDate(new Date(Date.now() + DELIVERY_DAYS * 86400000)),
+    deliveredAt: null, statusHistory: [{ status: "Placed", timestamp: Timestamp.now() }],
+  };
+  if (coupon && t.discount) data.couponCode = coupon.code;
+  if (method === "Razorpay") data.razorpayPaymentId = ref;
+  await addDoc(collection(db, "orders"), data);
+  return data;
+}
+
+async function sendEmails(o) {
+  if (typeof emailjs === "undefined" || !window.EMAILJS_CONFIG) return;
+  const { SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY } = window.EMAILJS_CONFIG;
+  if (!SERVICE_ID || /^YOUR_|^PASTE_/.test(SERVICE_ID) || !PUBLIC_KEY || /^YOUR_|^PASTE_/.test(PUBLIC_KEY) || /^YOUR_|^PASTE_/.test(TEMPLATE_ID)) return;
+  const d = new Date(), p2 = (n) => String(n).padStart(2, "0");
+  const base = {
+    orderId: o.orderNumber, orderDate: `${p2(d.getDate())}/${p2(d.getMonth() + 1)}/${d.getFullYear()} ${p2(d.getHours())}:${p2(d.getMinutes())}`,
+    products: o.items.map(i => `${i.name} x ${i.qty} - ₹${i.price * i.qty}`).join("\n") + (o.couponCode ? `\nCoupon ${o.couponCode}: -₹${o.discount}` : "") + `\nShipping: ${o.shippingCost ? "₹" + o.shippingCost : "FREE"}`,
+    total: `₹${o.total}`, utr: o.utr, paymentMethod: o.paymentMethod, paymentStatus: "Pending Verification",
+  };
+  try { await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...base, email: o.customerEmail, name: o.customerName, title: "Order Confirmation", address: o.address }, PUBLIC_KEY); } catch (e) { console.error("Customer email failed:", e); }
+  try {
+    const contact = `${o.address}\nMobile: ${o.customerPhone}` + (o.altPhone ? `\nAlt mobile: ${o.altPhone}` : "") + `\nCustomer email: ${o.customerEmail}`;
+    await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...base, email: ADMIN_EMAIL, name: "Taneeraa Admin", title: `NEW ORDER — verify payment (${o.paymentMethod}: ${o.utr})`, address: contact }, PUBLIC_KEY);
+  } catch (e) { console.error("Admin email failed:", e); }
+}
+
+function showDone(o) {
+  $("checkoutGrid").hidden = true; $("emptyState").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
+  const rows = [["Order ID", `<b>${esc(o.orderNumber)}</b>`], ["Items", o.items.map(i => `${esc(i.name)} × ${i.qty}`).join("<br>")], ["Total paid", `<b>${money(o.total)}</b>`], ["Payment", esc(o.paymentMethod)], ["Reference no.", esc(o.utr)], ["Payment status", "<b style='color:#B07A1A'>Pending verification</b>"], ["Deliver to", esc(o.address).replace(/\n/g, "<br>")]];
+  $("doneBox").innerHTML = rows.map(([k, v]) => `<div class="k"><span>${k}</span><span style="text-align:right">${v}</span></div>`).join("");
+  const msg = [`Hello Taneeraa, I have paid for my order.`, `Order ID: ${o.orderNumber}`, `Amount: ₹${o.total}` + (o.couponCode ? ` (coupon ${o.couponCode})` : ""), `Payment: ${o.paymentMethod} (${o.utr})`, `Items: ` + o.items.map(i => `${i.name} x${i.qty}`).join(", "), `Name: ${o.receiverName}`, `Mobile: ${o.customerPhone}`].join("\n");
+  $("waBtn").href = `https://wa.me/${WHATSAPP}?text=` + encodeURIComponent(msg);
+  if (fromCart) localStorage.setItem("tan_cart", "{}");
+  sessionStorage.removeItem("tan_coupon");
+}
+
+async function finish(f, method, ref) {
+  let order;
+  try { order = await saveOrder(f, method, ref); }
+  catch (e) {
+    console.error(e);
+    if (method === "Razorpay") {
+      showErr(`Your payment was received (Razorpay payment ID: ${ref}) but we could not save the order automatically. Please do NOT pay again. WhatsApp us this payment ID on ${WHATSAPP.slice(2)} and we will confirm your order.`);
+    } else showErr("Could not place your order — please check your details and try again.");
+    throw e;
+  }
+  showDone(order);
+  sendEmails(order);
+}
+
+$("coForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (busy) return;
+  showErr("");
+  const f = readForm();
+  if (!validate(f)) return;
+  const t = totals();
+  busy = true; $("payBtn").disabled = true;
+  const unlock = () => { busy = false; $("payBtn").disabled = false; renderPayBtn(); };
+  try {
+    await ensureUser();
+    if (pay() === "razorpay") {
+      $("payBtn").textContent = "Opening payment…";
+      const rz = new Razorpay({
+        key: rzpKey, amount: Math.round(t.total * 100), currency: "INR", name: "Taneeraa", description: "Order payment",
+        prefill: { name: (f.fname + " " + f.lname).trim(), email: f.email, contact: f.phone },
+        theme: { color: "#3F4A38" },
+        handler: async (resp) => { $("payBtn").textContent = "Saving your order…"; try { await finish(f, "Razorpay", resp.razorpay_payment_id); } catch {} unlock(); },
+        modal: { ondismiss: unlock },
+      });
+      rz.on("payment.failed", (r) => { showErr((r.error && r.error.description) || "Payment failed. Please try again."); unlock(); });
+      rz.open();
+    } else {
+      $("payBtn").textContent = "Placing your order…";
+      await finish(f, "UPI / PhonePe", f.utr); unlock();
+    }
+  } catch (err) { console.error(err); if (!$("errBox").classList.contains("show")) showErr(err.message || "Something went wrong. Please try again."); unlock(); }
+});
+
+load();
+</script>
+</body>
+</html>
