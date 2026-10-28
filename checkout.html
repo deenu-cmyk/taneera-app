@@ -173,7 +173,7 @@ section{margin-bottom:30px}
 <script type="module">
 import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { collection, getDocs, addDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { collection, getDocs, addDoc, serverTimestamp, Timestamp, setDoc, doc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const SHIPPING_FEE = 100;          // standard shipping, in rupees
 const FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this
@@ -337,7 +337,9 @@ async function saveOrder(f, method, ref, extra) {
   };
   if (coupon && t.discount) data.couponCode = coupon.code;
   if (extra) Object.assign(data, extra);
-  await addDoc(collection(db, "orders"), data);
+  // A verified Razorpay order uses the payment ID as its document ID, so one payment can only ever create one order.
+  if (data.razorpayPaymentId) await setDoc(doc(db, "orders", data.razorpayPaymentId), data);
+  else await addDoc(collection(db, "orders"), data);
   return data;
 }
 
