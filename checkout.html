@@ -159,7 +159,7 @@ section{margin-bottom:30px}
 <div class="done" id="done" hidden>
   <div class="check">✓</div>
   <h2 style="margin-bottom:6px">Thank you! Your order is placed</h2>
-  <p style="color:var(--text-2)">We will verify your payment and update you by email.</p>
+  <p style="color:var(--text-2)" id="doneSub">We will verify your payment and update you by email.</p>
   <div class="box" id="doneBox"></div>
   <a class="btn wa" id="waBtn" target="_blank" rel="noopener">Send payment details on WhatsApp</a>
   <a class="btn" href="index.html#track-order">Track your order</a>
@@ -169,7 +169,6 @@ section{margin-bottom:30px}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="emailjs-config.js"></script>
-<script src="razorpay-config.js" onerror="void 0"></script>
 
 <script type="module">
 import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
@@ -180,11 +179,21 @@ const SHIPPING_FEE = 100;          // standard shipping, in rupees
 const FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this
 const DELIVERY_DAYS = 5;
 const WHATSAPP = "919538162560";
+// Your Vercel backend (check the exact address in Vercel -> your project -> Overview -> Domains)
+const API_BASE = "https://taneera-backend.vercel.app/api";
 const STATES = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = (n) => "₹" + Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// Talks to the Vercel backend (create-order and verify)
+async function api(path, body) {
+  const r = await fetch(API_BASE + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || "Request failed. Please try again.");
+  return data;
+}
 
 const params = new URLSearchParams(location.search);
 const buyId = params.get("buy");
@@ -192,8 +201,8 @@ const fromCart = !buyId;
 let PRODUCTS = [], COUPONS = [], coupon = null, items = [], busy = false;
 
 $("state").innerHTML = '<option value=""></option>' + STATES.map(s => `<option>${s}</option>`).join("");
-const rzpKey = (window.RAZORPAY_CONFIG && window.RAZORPAY_CONFIG.KEY_ID) || "";
-const rzpReady = /^rzp_(test|live)_/.test(rzpKey) && typeof Razorpay !== "undefined";
+// Razorpay is offered whenever its script loaded (the key now comes from the backend)
+const rzpReady = typeof Razorpay !== "undefined";
 if (rzpReady) $("optRzp").hidden = false; else $("optUpiLabel").querySelector("input").checked = true;
 
 function pay() { return document.querySelector('input[name="pay"]:checked').value; }
@@ -310,7 +319,8 @@ async function ensureUser() {
 }
 function orderNumber() { return "TAN-" + Math.floor(10000 + Math.random() * 89999); }
 
-async function saveOrder(f, method, ref) {
+// extra = optional fields added to the order (used for verified Razorpay payments)
+async function saveOrder(f, method, ref, extra) {
   const user = await ensureUser();
   const t = totals();
   const lines = items.map(i => ({ productId: i.p.id, name: i.p.name, price: Number(i.p.sellingPrice) || 0, qty: i.qty, imageUrl: i.p.imageUrl || "" }));
@@ -326,7 +336,7 @@ async function saveOrder(f, method, ref) {
     deliveredAt: null, statusHistory: [{ status: "Placed", timestamp: Timestamp.now() }],
   };
   if (coupon && t.discount) data.couponCode = coupon.code;
-  if (method === "Razorpay") data.razorpayPaymentId = ref;
+  if (extra) Object.assign(data, extra);
   await addDoc(collection(db, "orders"), data);
   return data;
 }
@@ -336,31 +346,37 @@ async function sendEmails(o) {
   const { SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY } = window.EMAILJS_CONFIG;
   if (!SERVICE_ID || /^YOUR_|^PASTE_/.test(SERVICE_ID) || !PUBLIC_KEY || /^YOUR_|^PASTE_/.test(PUBLIC_KEY) || /^YOUR_|^PASTE_/.test(TEMPLATE_ID)) return;
   const d = new Date(), p2 = (n) => String(n).padStart(2, "0");
+  const paid = o.paymentStatus === "Paid";
   const base = {
     orderId: o.orderNumber, orderDate: `${p2(d.getDate())}/${p2(d.getMonth() + 1)}/${d.getFullYear()} ${p2(d.getHours())}:${p2(d.getMinutes())}`,
     products: o.items.map(i => `${i.name} x ${i.qty} - ₹${i.price * i.qty}`).join("\n") + (o.couponCode ? `\nCoupon ${o.couponCode}: -₹${o.discount}` : "") + `\nShipping: ${o.shippingCost ? "₹" + o.shippingCost : "FREE"}`,
-    total: `₹${o.total}`, utr: o.utr, paymentMethod: o.paymentMethod, paymentStatus: "Pending Verification",
+    total: `₹${o.total}`, utr: o.utr, paymentMethod: o.paymentMethod, paymentStatus: paid ? "Paid" : "Pending Verification",
   };
   try { await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...base, email: o.customerEmail, name: o.customerName, title: "Order Confirmation", address: o.address }, PUBLIC_KEY); } catch (e) { console.error("Customer email failed:", e); }
   try {
     const contact = `${o.address}\nMobile: ${o.customerPhone}` + (o.altPhone ? `\nAlt mobile: ${o.altPhone}` : "") + `\nCustomer email: ${o.customerEmail}`;
-    await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...base, email: ADMIN_EMAIL, name: "Taneeraa Admin", title: `NEW ORDER — verify payment (${o.paymentMethod}: ${o.utr})`, address: contact }, PUBLIC_KEY);
+    const adminTitle = paid ? `NEW PAID ORDER — ${o.paymentMethod} (${o.utr})` : `NEW ORDER — verify payment (${o.paymentMethod}: ${o.utr})`;
+    await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...base, email: ADMIN_EMAIL, name: "Taneeraa Admin", title: adminTitle, address: contact }, PUBLIC_KEY);
   } catch (e) { console.error("Admin email failed:", e); }
 }
 
 function showDone(o) {
   $("checkoutGrid").hidden = true; $("emptyState").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
-  const rows = [["Order ID", `<b>${esc(o.orderNumber)}</b>`], ["Items", o.items.map(i => `${esc(i.name)} × ${i.qty}`).join("<br>")], ["Total paid", `<b>${money(o.total)}</b>`], ["Payment", esc(o.paymentMethod)], ["Reference no.", esc(o.utr)], ["Payment status", "<b style='color:#B07A1A'>Pending verification</b>"], ["Deliver to", esc(o.address).replace(/\n/g, "<br>")]];
+  const paid = o.paymentStatus === "Paid";
+  const statusRow = paid ? "<b style='color:#3E7A4A'>Paid</b>" : "<b style='color:#B07A1A'>Pending verification</b>";
+  const rows = [["Order ID", `<b>${esc(o.orderNumber)}</b>`], ["Items", o.items.map(i => `${esc(i.name)} × ${i.qty}`).join("<br>")], ["Total paid", `<b>${money(o.total)}</b>`], ["Payment", esc(o.paymentMethod)], ["Reference no.", esc(o.utr)], ["Payment status", statusRow], ["Deliver to", esc(o.address).replace(/\n/g, "<br>")]];
   $("doneBox").innerHTML = rows.map(([k, v]) => `<div class="k"><span>${k}</span><span style="text-align:right">${v}</span></div>`).join("");
+  $("doneSub").textContent = paid ? "Your payment was received. We will update you by email as your order ships." : "We will verify your payment and update you by email.";
   const msg = [`Hello Taneeraa, I have paid for my order.`, `Order ID: ${o.orderNumber}`, `Amount: ₹${o.total}` + (o.couponCode ? ` (coupon ${o.couponCode})` : ""), `Payment: ${o.paymentMethod} (${o.utr})`, `Items: ` + o.items.map(i => `${i.name} x${i.qty}`).join(", "), `Name: ${o.receiverName}`, `Mobile: ${o.customerPhone}`].join("\n");
   $("waBtn").href = `https://wa.me/${WHATSAPP}?text=` + encodeURIComponent(msg);
+  $("waBtn").hidden = paid; // the WhatsApp payment note is only needed for manual UPI payments
   if (fromCart) localStorage.setItem("tan_cart", "{}");
   sessionStorage.removeItem("tan_coupon");
 }
 
-async function finish(f, method, ref) {
+async function finish(f, method, ref, extra) {
   let order;
-  try { order = await saveOrder(f, method, ref); }
+  try { order = await saveOrder(f, method, ref, extra); }
   catch (e) {
     console.error(e);
     if (method === "Razorpay") {
@@ -385,11 +401,44 @@ $("coForm").addEventListener("submit", async (e) => {
     await ensureUser();
     if (pay() === "razorpay") {
       $("payBtn").textContent = "Opening payment…";
+
+      // 1) The backend works out the real price from your product list and creates the Razorpay order
+      const order = await api("/create-order", {
+        items: items.map(i => ({ id: i.p.id, qty: i.qty })),
+        couponCode: coupon && t.discount ? coupon.code : undefined,
+      });
+      if (Number(order.total) !== Number(t.total)) {
+        showErr("Prices or offers have just changed. Please refresh this page and try again.");
+        unlock(); return;
+      }
+
+      // 2) Open the Razorpay payment window
       const rz = new Razorpay({
-        key: rzpKey, amount: Math.round(t.total * 100), currency: "INR", name: "Taneeraa", description: "Order payment",
+        key: order.keyId, amount: order.amount, currency: "INR", order_id: order.orderId,
+        name: "Taneeraa", description: "Order payment",
         prefill: { name: (f.fname + " " + f.lname).trim(), email: f.email, contact: f.phone },
         theme: { color: "#3F4A38" },
-        handler: async (resp) => { $("payBtn").textContent = "Saving your order…"; try { await finish(f, "Razorpay", resp.razorpay_payment_id); } catch {} unlock(); },
+        handler: async (resp) => {
+          // 3) Check the payment signature on the backend before accepting it
+          $("payBtn").textContent = "Verifying payment…";
+          let verified = false;
+          try { verified = !!(await api("/verify", resp)).verified; } catch (err) { console.error(err); }
+          if (!verified) {
+            showErr(`We could not confirm your payment (Razorpay payment ID: ${resp.razorpay_payment_id}). If money was deducted, please do NOT pay again — WhatsApp us this payment ID on ${WHATSAPP.slice(2)}.`);
+            unlock(); return;
+          }
+          // 4) Save the order as Paid
+          $("payBtn").textContent = "Saving your order…";
+          try {
+            await finish(f, "Razorpay", resp.razorpay_payment_id, {
+              paymentStatus: "Paid",
+              razorpayOrderId: resp.razorpay_order_id,
+              razorpayPaymentId: resp.razorpay_payment_id,
+              razorpaySignature: resp.razorpay_signature,
+            });
+          } catch {}
+          unlock();
+        },
         modal: { ondismiss: unlock },
       });
       rz.on("payment.failed", (r) => { showErr((r.error && r.error.description) || "Payment failed. Please try again."); unlock(); });
