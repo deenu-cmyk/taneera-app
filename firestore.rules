@@ -1,74 +1,186 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Admin access
     function isAdmin() {
       return request.auth != null
         && request.auth.token.email == 'tanirascollection@gmail.com';
     }
 
+    // Check whether the user is logged in
     function isSignedIn() {
       return request.auth != null;
     }
 
+    // PRODUCTS
+    // Anyone can view products.
+    // Only admin can add, edit, or delete products.
     match /products/{productId} {
       allow read: if true;
+
       allow create, update, delete: if isAdmin();
     }
 
+    // CUSTOMERS
+    // Customers can access only their own account.
+    // Admin can read all customer accounts.
     match /customers/{uid} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
-      allow read: if isAdmin();
+      allow read: if isAdmin()
+        || (isSignedIn() && request.auth.uid == uid);
+
+      allow create: if isSignedIn()
+        && request.auth.uid == uid;
+
+      allow update: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly([
+            'name',
+            'phone',
+            'address',
+            'photoURL',
+            'updatedAt'
+          ]);
+
+      allow delete: if isAdmin();
     }
 
+    // ORDERS
     match /orders/{orderId} {
+
+      // Customers can create UPI orders awaiting verification.
+      // Razorpay payment confirmation must be performed by a trusted backend.
       allow create: if isSignedIn()
+
         && request.resource.data.keys().hasAll([
-             'orderNumber','customerId','customerEmail','items','subtotal',
-             'discount','total','address','utr','paymentMethod',
-             'paymentStatus','status','createdAt'])
+          'orderNumber',
+          'customerId',
+          'customerEmail',
+          'items',
+          'subtotal',
+          'discount',
+          'total',
+          'address',
+          'utr',
+          'paymentMethod',
+          'paymentStatus',
+          'status',
+          'createdAt'
+        ])
+
         && request.resource.data.keys().hasOnly([
-             'orderNumber','customerId','customerEmail','customerName','items',
-             'subtotal','discount','total','address','customerPhone',
-             'receiverName','altPhone','shippingAddress','utr','paymentMethod',
-             'paymentStatus','status','createdAt','estimatedDeliveryAt',
-             'deliveredAt','statusHistory','couponCode'])
-        && request.resource.data.customerId == request.auth.uid
-        && request.resource.data.customerEmail == request.auth.token.email
-        && request.resource.data.paymentStatus == 'Pending Verification'
+          'orderNumber',
+          'customerId',
+          'customerEmail',
+          'customerName',
+          'items',
+          'subtotal',
+          'discount',
+          'total',
+          'address',
+          'customerPhone',
+          'receiverName',
+          'altPhone',
+          'shippingAddress',
+          'utr',
+          'paymentMethod',
+          'paymentStatus',
+          'status',
+          'createdAt',
+          'estimatedDeliveryAt',
+          'deliveredAt',
+          'statusHistory',
+          'couponCode',
+          'shippingCost',
+          'shippingMethod'
+        ])
+
+        && request.resource.data.customerId
+          == request.auth.uid
+
+        && request.resource.data.customerEmail is string
+
+        && (
+          request.auth.token.firebase.sign_in_provider
+            == 'anonymous'
+          || request.resource.data.customerEmail
+            == request.auth.token.email
+        )
+
+        && request.resource.data.paymentMethod == 'UPI'
+
+        && request.resource.data.paymentStatus
+          == 'Pending Verification'
+
         && request.resource.data.status == 'Placed'
+
         && request.resource.data.createdAt == request.time
+
         && request.resource.data.deliveredAt == null
+
         && request.resource.data.items is list
         && request.resource.data.items.size() > 0
         && request.resource.data.items.size() <= 50
+
         && request.resource.data.subtotal is number
         && request.resource.data.discount is number
         && request.resource.data.total is number
+
+        && request.resource.data.get('shippingCost', 0) is number
+        && request.resource.data.get('shippingCost', 0) >= 0
+
         && request.resource.data.subtotal > 0
         && request.resource.data.discount >= 0
-        && request.resource.data.total >= 0
-        && request.resource.data.total == request.resource.data.subtotal - request.resource.data.discount
+        && request.resource.data.discount
+          <= request.resource.data.subtotal
+
+        && request.resource.data.total
+          == request.resource.data.subtotal
+            - request.resource.data.discount
+            + request.resource.data.get('shippingCost', 0)
+
         && request.resource.data.utr is string
         && request.resource.data.utr.size() >= 6
         && request.resource.data.utr.size() <= 40
+
         && request.resource.data.address is string
+        && request.resource.data.address.size() > 0
         && request.resource.data.address.size() <= 600;
 
+      // Customers can read their own orders.
+      // Admin can read all orders.
       allow read: if isSignedIn()
-        && (resource.data.customerId == request.auth.uid || isAdmin());
+        && (
+          resource.data.customerId == request.auth.uid
+          || isAdmin()
+        );
 
+      // Only admin can modify or delete orders from the client.
       allow update, delete: if isAdmin();
     }
 
+    // COUPONS
+    // Anyone can view available coupon documents.
+    // Only admin can manage coupons.
     match /coupons/{couponId} {
       allow read: if true;
+
       allow create, update, delete: if isAdmin();
     }
 
+    // COUNTERS
+    // Only admin can access counters.
     match /counters/{counterId} {
       allow read, write: if isAdmin();
+    }
+
+    // Deny access to all other collections unless explicitly allowed.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
