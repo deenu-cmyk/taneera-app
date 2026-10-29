@@ -52,7 +52,6 @@ section{margin-bottom:30px}
 .pay{width:100%;height:56px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--navy),var(--forest));color:#fff;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(36,48,32,.25);transition:.15s}
 .pay:hover{transform:translateY(-1px)}.pay:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .err{display:none;margin-top:12px;background:#FDECEA;color:#8E2A20;border-radius:10px;padding:12px 14px;font-size:13.5px}.err.show{display:block}
-.info{display:none;margin-top:12px;background:#FFF6E0;color:#7A5A12;border-radius:10px;padding:12px 14px;font-size:13.5px}.info.show{display:block}
 .lines{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
 .line{display:flex;align-items:center;gap:14px}
 .thumb{position:relative;width:64px;height:64px;flex-shrink:0}
@@ -145,7 +144,6 @@ section{margin-bottom:30px}
     </section>
 
     <button class="pay" id="payBtn" type="submit">Pay now</button>
-    <div class="info" id="infoBox"></div>
     <div class="err" id="errBox"></div>
     <p class="note" style="text-align:center;margin-top:14px">No account needed. By placing your order you agree to our <a href="terms.html" style="text-decoration:underline">Terms</a> and <a href="refund-policy.html" style="text-decoration:underline">Refund Policy</a>.</p>
   </form>
@@ -175,10 +173,10 @@ section{margin-bottom:30px}
 <script type="module">
 import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { collection, getDocs, addDoc, serverTimestamp, Timestamp, getDoc, doc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { collection, doc, getDocs, addDoc, setDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-let SHIPPING_FEE = 100;          // standard shipping, in rupees
-let FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this (keep same as api/_lib/shop.js)
+const SHIPPING_FEE = 100;          // standard shipping, in rupees
+const FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this
 const DELIVERY_DAYS = 5;
 const WHATSAPP = "919538162560";
 // Your Vercel backend (check the exact address in Vercel -> your project -> Overview -> Domains)
@@ -188,7 +186,6 @@ const STATES = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisga
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = (n) => "₹" + Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 // Talks to the Vercel backend (create-order and verify)
 async function api(path, body) {
@@ -225,15 +222,6 @@ async function load() {
     PRODUCTS = ps.docs.map(d => ({ id: d.id, ...d.data() }));
     COUPONS = cs.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.active);
   } catch (e) { console.error(e); showErr("Could not load your cart. Please check your connection and refresh."); }
-  // Shipping charges set by the admin (Admin panel → Settings → Shipping charges)
-  try {
-    const st = await getDoc(doc(db, "settings", "shipping"));
-    if (st.exists()) {
-      const d = st.data();
-      if (Number.isFinite(Number(d.fee))) SHIPPING_FEE = Number(d.fee);
-      if (Number.isFinite(Number(d.freeAbove))) FREE_SHIPPING_ABOVE = Number(d.freeAbove);
-    }
-  } catch (e) { console.error("shipping settings:", e); }
   let raw = [];
   if (buyId) raw = [{ id: buyId, qty: 1 }];
   else { try { const c = JSON.parse(localStorage.getItem("tan_cart") || "{}"); raw = Object.keys(c).map(id => ({ id, qty: c[id] })); } catch {} }
@@ -255,7 +243,7 @@ function totals() {
     discount = Math.round(el * coupon.discountPercentage / 100);
   }
   const after = Math.max(0, subtotal - discount);
-  const shipping = SHIPPING_FEE <= 0 ? 0 : (FREE_SHIPPING_ABOVE > 0 && after > FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE);
+  const shipping = after > FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
   return { subtotal, discount, shipping, total: after + shipping };
 }
 function renderSummary() {
@@ -274,7 +262,7 @@ function renderSummary() {
   renderPayBtn();
 }
 function renderPayBtn() {
-  if (!items.length || locked) return;
+  if (!items.length) return;
   $("payBtn").textContent = pay() === "razorpay" ? `Pay now · ${money(totals().total)}` : "I've Paid — Place Order";
 }
 $("cpBtn").onclick = () => {
@@ -321,7 +309,6 @@ function validate(f) {
 }
 document.querySelectorAll(".f input,.f select").forEach(el => el.addEventListener("input", () => { const b = el.closest(".f"); if (b && b.classList.contains("bad")) b.classList.remove("bad"); }));
 function showErr(t) { const b = $("errBox"); b.textContent = t || ""; b.classList.toggle("show", !!t); if (t) b.scrollIntoView({ behavior: "smooth", block: "center" }); }
-function showInfo(t) { const b = $("infoBox"); b.textContent = t || ""; b.classList.toggle("show", !!t); }
 
 /* ---------- placing the order ---------- */
 async function ensureUser() {
@@ -332,7 +319,7 @@ async function ensureUser() {
 }
 function orderNumber() { return "TAN-" + Math.floor(10000 + Math.random() * 89999); }
 
-// extra = optional fields added to the order (used for UPI payments)
+// extra = optional fields added to the order (used for verified Razorpay payments)
 async function saveOrder(f, method, ref, extra) {
   const user = await ensureUser();
   const t = totals();
@@ -350,7 +337,8 @@ async function saveOrder(f, method, ref, extra) {
   };
   if (coupon && t.discount) data.couponCode = coupon.code;
   if (extra) Object.assign(data, extra);
-  await addDoc(collection(db, "orders"), data);
+  if (extra && extra.razorpayPaymentId) await setDoc(doc(db, "orders", extra.razorpayPaymentId), data);
+  else await addDoc(collection(db, "orders"), data);
   return data;
 }
 
@@ -392,21 +380,19 @@ async function finish(f, method, ref, extra) {
   try { order = await saveOrder(f, method, ref, extra); }
   catch (e) {
     console.error(e);
-    showErr("Could not place your order — please check your details and try again.");
+    if (method === "Razorpay") {
+      showErr(`Your payment was received (Razorpay payment ID: ${ref}) but we could not save the order automatically. Please do NOT pay again. WhatsApp us this payment ID on ${WHATSAPP.slice(2)} and we will confirm your order.`);
+    } else showErr("Could not place your order — please check your details and try again.");
     throw e;
   }
   showDone(order);
   sendEmails(order);
 }
 
-// Once money has been taken but the order is not confirmed yet, the Pay button stays locked
-// so the customer cannot pay a second time by mistake.
-let locked = false;
-
 $("coForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (busy || locked) return;
-  showErr(""); showInfo("");
+  if (busy) return;
+  showErr("");
   const f = readForm();
   if (!validate(f)) return;
   const t = totals();
@@ -434,39 +420,34 @@ $("coForm").addEventListener("submit", async (e) => {
         prefill: { name: (f.fname + " " + f.lname).trim(), email: f.email, contact: f.phone },
         theme: { color: "#3F4A38" },
         handler: async (resp) => {
-          // 3) Payment done. The backend checks it with Razorpay, then saves the order as Paid.
-          locked = true; busy = true; $("payBtn").disabled = true;
-          $("payBtn").textContent = "Payment received — confirming your order…";
-          showInfo("Your order is placed. Please wait for the confirmation — do not close or refresh this page.");
-
-          const body = {
-            ...resp,
-            order: {
+          // 3) The backend checks the payment with Razorpay and records it as verified
+          $("payBtn").textContent = "Confirming your payment…";
+          let verified = false;
+          try {
+            const r = await api("/verify", {
+              ...resp,
               items: items.map(i => ({ id: i.p.id, qty: i.qty })),
               couponCode: coupon && t.discount ? coupon.code : undefined,
-              customerId: auth.currentUser ? auth.currentUser.uid : "",
-              customer: { email: f.email, phone: f.phone, fname: f.fname, lname: f.lname, address: f.address, apt: f.apt, landmark: f.landmark, city: f.city, state: f.state, pin: f.pin, alt: f.alt },
-            },
-          };
-
-          // Try up to 3 times. This is safe: the backend never creates a duplicate order for the same payment.
-          let placed = null;
-          for (let n = 0; n < 3 && !placed; n++) {
-            try { const r = await api("/verify", body); placed = r.order; }
-            catch (err) { console.error("verify attempt " + (n + 1) + " failed:", err); if (n < 2) await sleep(1500 * (n + 1)); }
+            });
+            verified = !!r.verified;
+          } catch (err) { console.error(err); }
+          if (!verified) {
+            showErr(`We could not confirm your payment (Razorpay payment ID: ${resp.razorpay_payment_id}). If money was deducted, please do NOT pay again — WhatsApp us this payment ID on ${WHATSAPP.slice(2)}.`);
+            unlock(); return;
           }
-
-          if (!placed) {
-            showInfo("");
-            showErr(`Payment received (Razorpay payment ID: ${resp.razorpay_payment_id}). We could not confirm your order automatically yet. Please do NOT pay again — WhatsApp us this payment ID on ${WHATSAPP.slice(2)} and we will confirm your order.`);
-            $("payBtn").textContent = "Payment received — please WhatsApp us";
-            return; // stays locked on purpose
-          }
-          showInfo("");
-          showDone(placed);
-          sendEmails(placed);
+          // 4) Save the order as Paid (your rules accept it because the payment is now verified)
+          $("payBtn").textContent = "Saving your order…";
+          try {
+            await finish(f, "Razorpay", resp.razorpay_payment_id, {
+              paymentStatus: "Paid",
+              razorpayOrderId: resp.razorpay_order_id,
+              razorpayPaymentId: resp.razorpay_payment_id,
+              razorpaySignature: resp.razorpay_signature,
+            });
+          } catch {}
+          unlock();
         },
-        modal: { ondismiss: () => { if (!locked) unlock(); } },
+        modal: { ondismiss: unlock },
       });
       rz.on("payment.failed", (r) => { showErr((r.error && r.error.description) || "Payment failed. Please try again."); unlock(); });
       rz.open();
