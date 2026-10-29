@@ -173,14 +173,15 @@ section{margin-bottom:30px}
 <script type="module">
 import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { collection, doc, getDocs, addDoc, setDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { collection, doc, getDoc, getDocs, addDoc, setDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const SHIPPING_FEE = 100;          // standard shipping, in rupees
-const FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this
+// Shipping defaults. The admin can change both in shipping-settings.html (saved in Firestore: settings/shipping)
+let SHIPPING_FEE = 100;            // standard shipping, in rupees
+let FREE_SHIPPING_ABOVE = 999;     // free shipping when the amount after discount is above this
 const DELIVERY_DAYS = 5;
 const WHATSAPP = "919538162560";
 // Your Vercel backend (check the exact address in Vercel -> your project -> Overview -> Domains)
-const API_BASE = "https://taneera-backend.vercel.app/api";
+const API_BASE = "https://taneera-backend-9f81.vercel.app/api";
 const STATES = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
 
 const $ = (id) => document.getElementById(id);
@@ -215,6 +216,30 @@ function syncPay() {
 }
 document.querySelectorAll('input[name="pay"]').forEach(r => r.addEventListener("change", syncPay));
 
+/* ---------- shipping amounts set by the admin (Firestore "settings" collection) ---------- */
+// Looks through the settings documents for the shipping charge and the free-shipping limit.
+// A number whose name contains "free", "above", "min", "limit" or "threshold" is the free-shipping limit;
+// any other number whose name (or document name) contains "ship" or "deliver" is the shipping charge.
+async function loadShipping() {
+  try {
+    const snap = await getDocs(collection(db, "settings"));
+    let fee = null, free = null;
+    snap.docs.forEach(d => {
+      const docIsShipping = /ship|deliver|freight/i.test(d.id);
+      Object.entries(d.data()).forEach(([k, v]) => {
+        if (v === "" || v === null || typeof v === "boolean") return;
+        const n = Number(v);
+        if (!Number.isFinite(n) || n < 0) return;
+        if (!docIsShipping && !/ship|deliver|freight/i.test(k)) return;
+        if (/free|above|min|limit|threshold|over/i.test(k)) { if (free === null) free = n; }
+        else if (fee === null) fee = n;
+      });
+    });
+    if (fee !== null) SHIPPING_FEE = fee;
+    if (free !== null) FREE_SHIPPING_ABOVE = free;
+  } catch (e) { console.warn("Using default shipping settings", e); }
+}
+
 /* ---------- load data ---------- */
 async function load() {
   try {
@@ -222,6 +247,7 @@ async function load() {
     PRODUCTS = ps.docs.map(d => ({ id: d.id, ...d.data() }));
     COUPONS = cs.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.active);
   } catch (e) { console.error(e); showErr("Could not load your cart. Please check your connection and refresh."); }
+  await loadShipping();
   let raw = [];
   if (buyId) raw = [{ id: buyId, qty: 1 }];
   else { try { const c = JSON.parse(localStorage.getItem("tan_cart") || "{}"); raw = Object.keys(c).map(id => ({ id, qty: c[id] })); } catch {} }
