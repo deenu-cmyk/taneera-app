@@ -175,10 +175,10 @@ section{margin-bottom:30px}
 <script type="module">
 import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { collection, getDocs, addDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { collection, getDocs, addDoc, serverTimestamp, Timestamp, getDoc, doc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const SHIPPING_FEE = 100;          // standard shipping, in rupees
-const FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this (keep same as api/_lib/shop.js)
+let SHIPPING_FEE = 100;          // standard shipping, in rupees
+let FREE_SHIPPING_ABOVE = 999;   // free shipping when the amount after discount is above this (keep same as api/_lib/shop.js)
 const DELIVERY_DAYS = 5;
 const WHATSAPP = "919538162560";
 // Your Vercel backend (check the exact address in Vercel -> your project -> Overview -> Domains)
@@ -225,6 +225,15 @@ async function load() {
     PRODUCTS = ps.docs.map(d => ({ id: d.id, ...d.data() }));
     COUPONS = cs.docs.map(d => ({ id: d.id, ...d.data() })).filter(c => c.active);
   } catch (e) { console.error(e); showErr("Could not load your cart. Please check your connection and refresh."); }
+  // Shipping charges set by the admin (Admin panel → Settings → Shipping charges)
+  try {
+    const st = await getDoc(doc(db, "settings", "shipping"));
+    if (st.exists()) {
+      const d = st.data();
+      if (Number.isFinite(Number(d.fee))) SHIPPING_FEE = Number(d.fee);
+      if (Number.isFinite(Number(d.freeAbove))) FREE_SHIPPING_ABOVE = Number(d.freeAbove);
+    }
+  } catch (e) { console.error("shipping settings:", e); }
   let raw = [];
   if (buyId) raw = [{ id: buyId, qty: 1 }];
   else { try { const c = JSON.parse(localStorage.getItem("tan_cart") || "{}"); raw = Object.keys(c).map(id => ({ id, qty: c[id] })); } catch {} }
@@ -246,7 +255,7 @@ function totals() {
     discount = Math.round(el * coupon.discountPercentage / 100);
   }
   const after = Math.max(0, subtotal - discount);
-  const shipping = after > FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
+  const shipping = SHIPPING_FEE <= 0 ? 0 : (FREE_SHIPPING_ABOVE > 0 && after > FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE);
   return { subtotal, discount, shipping, total: after + shipping };
 }
 function renderSummary() {
