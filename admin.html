@@ -359,7 +359,19 @@
 
       <!-- ========== SETTINGS ========== -->
       <section class="dash-section" id="section-settings" style="display:none">
-        <div class="toolbar"><div><h2>Settings</h2><p>Admin account details.</p></div></div>
+        <div class="toolbar"><div><h2>Settings</h2><p>Shipping charges and admin account details.</p></div></div>
+
+        <div class="form-card" style="max-width:560px;margin-bottom:20px">
+          <h3 style="font-size:16px;margin-bottom:4px">🚚 Shipping charges</h3>
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:16px">Applies to new orders straight away, on the checkout page and in the payment amount.</p>
+          <div class="ap-row">
+            <div class="ap-field"><label>Shipping fee (₹)</label><input type="number" id="shipFee" min="0" step="1" placeholder="100"></div>
+            <div class="ap-field"><label>Free shipping above (₹)</label><input type="number" id="shipFreeAbove" min="0" step="1" placeholder="999"></div>
+          </div>
+          <p style="font-size:12.5px;color:var(--text-2);margin-bottom:14px">Tip: enter 0 in "Free shipping above" to charge the fee on every order. Enter 0 in "Shipping fee" to make shipping free for everyone.</p>
+          <button class="btn btn-primary" id="shipSaveBtn" onclick="saveShippingSettings()">Save shipping charges</button>
+        </div>
+
         <div class="form-card" style="max-width:none">
           <p style="font-size:13.5px;color:var(--text-2);margin-bottom:6px">Admin email (fixed — not editable from any customer interface):</p>
           <p style="font-weight:700;margin-bottom:20px" id="settingsEmailLabel">—</p>
