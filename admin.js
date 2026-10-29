@@ -6,7 +6,7 @@ import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import {
   collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot,
-  query, orderBy, serverTimestamp, Timestamp, arrayUnion, runTransaction
+  query, orderBy, serverTimestamp, Timestamp, arrayUnion, runTransaction, getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { buildInvoiceHTML, downloadInvoicePDF, printInvoice } from "./invoice.js";
 
@@ -71,10 +71,49 @@ function initDashboard() {
   listenToOrders();
   listenToCustomers();
   listenToCoupons();
+  loadShippingSettings();
   initNav();
   initProductForm();
   initCouponForm();
 }
+
+/* ============================================================
+   SHIPPING CHARGES — stored in Firestore doc settings/shipping
+   (read by the checkout page and by the payment backend)
+   ============================================================ */
+async function loadShippingSettings() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "shipping"));
+    const d = snap.exists() ? snap.data() : {};
+    document.getElementById("shipFee").value = d.fee ?? 100;
+    document.getElementById("shipFreeAbove").value = d.freeAbove ?? 999;
+  } catch (err) {
+    console.error("Could not load shipping settings:", err);
+  }
+}
+
+window.saveShippingSettings = async function saveShippingSettings() {
+  const fee = Number(document.getElementById("shipFee").value);
+  const freeAbove = Number(document.getElementById("shipFreeAbove").value);
+  if (!Number.isFinite(fee) || fee < 0 || !Number.isFinite(freeAbove) || freeAbove < 0) {
+    showToast("Enter valid amounts (0 or more).");
+    return;
+  }
+  const btn = document.getElementById("shipSaveBtn");
+  btn.disabled = true;
+  try {
+    await setDoc(doc(db, "settings", "shipping"), {
+      fee: Math.round(fee), freeAbove: Math.round(freeAbove),
+      updatedAt: serverTimestamp(), updatedBy: currentAdminEmail,
+    }, { merge: true });
+    showToast("Shipping charges saved");
+  } catch (err) {
+    console.error(err);
+    showToast("Could not save — check the Firestore rules for the settings collection.");
+  } finally {
+    btn.disabled = false;
+  }
+};
 
 /* ============================================================
    SIDEBAR NAVIGATION
