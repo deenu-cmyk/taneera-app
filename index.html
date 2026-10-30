@@ -2536,6 +2536,18 @@ footer{background:var(--forest)}
 
   checkUser((user) => {
     currentUser = user;   // guests (anonymous) keep a user object so they can track their orders
+
+    // Link like index.html?track=TAN-12345 → scroll to Track Order and search it automatically
+    const tp = new URLSearchParams(location.search).get('track');
+    if (tp && user && !window.__trackedFromLink) {
+      window.__trackedFromLink = true;
+      setTimeout(() => {
+        document.getElementById('trackOrderInput').value = tp;
+        document.getElementById('track-order').scrollIntoView({ behavior: 'smooth' });
+        window.trackOrder();
+      }, 500);
+    }
+
     const badge = document.getElementById('loginBadge');
     if (user && !user.isAnonymous) {
       // Keep the clean SVG profile icon; just show the green "logged in" dot.
@@ -2598,6 +2610,17 @@ footer{background:var(--forest)}
       if (window.location.hash.startsWith('#offer/')) navigateBack();
     }
   });
+</script>
+
+<!-- WhatsApp float button: after an order is placed, pre-fill it with that order's details -->
+<script>
+(function () {
+  try {
+    var o = JSON.parse(localStorage.getItem("tan_last_order") || "null");
+    var a = document.querySelector(".wa-float");
+    if (o && a) a.href = "https://wa.me/919538162560?text=" + encodeURIComponent("Hello Taneeraa, my order " + o.id + " (₹" + o.total + ") is placed. Please share the order details and updates.");
+  } catch (e) {}
+})();
 </script>
 </body>
 </html>
