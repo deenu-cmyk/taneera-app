@@ -9,6 +9,8 @@ import {
   query, orderBy, serverTimestamp, Timestamp, arrayUnion, runTransaction, getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { buildInvoiceHTML, downloadInvoicePDF, printInvoice } from "./invoice.js";
+import { initRazorpayAdmin } from "./razorpay-admin.js";
+import { initCategoryAdmin, getCategoryNames } from "./categories-admin.js";
 
 // ============================================================
 // CLOUDINARY — product image hosting.
@@ -60,7 +62,8 @@ let uploadedImageFile = null;
 let uploadedImagePreviewUrl = "";
 let dashboardInitialized = false;
 
-const CATEGORIES = ["Handmade Earring", "Handmade Necklace", "Handpicked Earrings", "Traditional Wears", "Jewellery Jars", "Anti Tarnish & Diamond Replica"];
+// Categories now live in Firestore and are managed from Admin -> Categories
+// (see categories-admin.js). The product form dropdown reads them from there.
 
 function initDashboard() {
   if (dashboardInitialized) return;
@@ -72,6 +75,9 @@ function initDashboard() {
   listenToCustomers();
   listenToCoupons();
   loadShippingSettings();
+  // These two add their own sidebar links, so they must run BEFORE initNav()
+  initRazorpayAdmin(() => ORDERS);
+  initCategoryAdmin({ getProducts: () => PRODUCTS, onChange: populateCategoryDropdown, toast: showToast });
   initNav();
   initProductForm();
   initCouponForm();
@@ -140,6 +146,7 @@ function listenToProducts() {
     renderProductTable();
     renderKPIs();
     populateCouponProductList();
+    if (window.refreshCategoryTable) window.refreshCategoryTable(); // keeps the "Products" count per category live
   }, (err) => {
     console.error("Products listener error:", err);
     showToast("Could not load products — check Firestore is enabled and rules are deployed.");
@@ -195,6 +202,7 @@ function listenToOrders() {
     renderOrdersTable();
     renderOrderKPIs();
     renderInvoicesTable();
+    if (window.refreshRazorpayTable) window.refreshRazorpayTable(); // re-checks which Razorpay payments have an order
   }, (err) => {
     console.error("Orders listener error:", err);
     // Non-fatal for the Products tab — just leave Orders empty.
@@ -734,10 +742,13 @@ window.confirmDeleteCoupon = async function confirmDeleteCoupon() {
 /* ============================================================
    ADD / EDIT PRODUCT FORM
    ============================================================ */
+// The category list comes from Admin -> Categories (Firestore), so you can add / rename categories yourself.
 function populateCategoryDropdown() {
   const select = document.getElementById("pCategory");
+  const keep = select.value; // don't lose the choice if the list refreshes while the form is open
   select.innerHTML = `<option value="" disabled selected>Select category</option>` +
-    CATEGORIES.map((c) => `<option value="${c}">${c}</option>`).join("");
+    getCategoryNames().map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+  if (keep) select.value = keep;
 }
 
 function initProductForm() {
