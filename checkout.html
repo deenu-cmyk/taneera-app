@@ -77,6 +77,13 @@ section{margin-bottom:30px}
 .check{width:64px;height:64px;border-radius:50%;background:#E3F1E5;color:var(--ok);display:grid;place-items:center;font-size:32px;margin:0 auto 14px}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:14px;font-weight:600;font-size:15px;border:1px solid var(--navy);color:var(--navy);background:#fff;cursor:pointer;margin-top:12px}
 .btn.wa{background:#25D366;border-color:#25D366;color:#fff}.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--forest)}
+.oid{display:inline-block;margin:14px auto 0;padding:10px 18px;background:#FBF6EA;border:1px dashed var(--gold);border-radius:10px;font-size:15px}
+.oid b{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);letter-spacing:.04em}
+.tl{display:flex;justify-content:space-between;gap:6px;margin:24px 0 4px;text-align:center}
+.tl div{flex:1;font-size:12px;color:var(--text-2)}
+.tl div i{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;margin:0 auto 6px;background:#EFE6D8;border:2px solid var(--border);font-style:normal;font-size:13px;font-weight:600}
+.tl div.on{color:var(--forest);font-weight:600}
+.tl div.on i{background:var(--ok);border-color:var(--ok);color:#fff}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -158,12 +165,15 @@ section{margin-bottom:30px}
 
 <div class="done" id="done" hidden>
   <div class="check">✓</div>
-  <h2 style="margin-bottom:6px">Thank you! Your order is placed</h2>
-  <p style="color:var(--text-2)" id="doneSub">We will verify your payment and update you by email.</p>
+  <h2 style="margin-bottom:6px" id="doneTitle">Thank you! Your order is placed</h2>
+  <p style="color:var(--text-2)" id="doneSub"></p>
+  <div class="oid" id="doneOid"></div>
+  <div class="tl" id="doneTl"></div>
   <div class="box" id="doneBox"></div>
-  <a class="btn wa" id="waBtn" target="_blank" rel="noopener">Send payment details on WhatsApp</a>
-  <a class="btn" href="index.html#track-order">Track your order</a>
-  <a class="btn gold" href="index.html">Continue shopping</a>
+  <p class="note" id="doneMail" style="margin-top:14px"></p>
+  <a class="btn gold" id="trackBtn" href="index.html#track-order">Track your order</a>
+  <a class="btn wa" id="waBtn" target="_blank" rel="noopener">Send order details on WhatsApp</a>
+  <a class="btn" href="index.html">Continue shopping</a>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -380,6 +390,7 @@ async function sendEmails(o) {
     orderId: o.orderNumber, orderDate: `${p2(d.getDate())}/${p2(d.getMonth() + 1)}/${d.getFullYear()} ${p2(d.getHours())}:${p2(d.getMinutes())}`,
     products: o.items.map(i => `${i.name} x ${i.qty} - ₹${i.price * i.qty}`).join("\n") + (o.couponCode ? `\nCoupon ${o.couponCode}: -₹${o.discount}` : "") + `\nShipping: ${o.shippingCost ? "₹" + o.shippingCost : "FREE"}`,
     total: `₹${o.total}`, utr: o.utr, paymentMethod: o.paymentMethod, paymentStatus: paid ? "Paid" : "Pending Verification",
+    orderStatus: "Order Placed", trackLink: `${location.origin}/index.html?track=${encodeURIComponent(o.orderNumber)}#track-order`,
   };
   try { await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...base, email: o.customerEmail, name: o.customerName, title: "Order Confirmation", address: o.address }, PUBLIC_KEY); } catch (e) { console.error("Customer email failed:", e); }
   try {
@@ -392,13 +403,48 @@ async function sendEmails(o) {
 function showDone(o) {
   $("checkoutGrid").hidden = true; $("emptyState").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
   const paid = o.paymentStatus === "Paid";
+  const first = String(o.receiverName || o.customerName || "").trim().split(" ")[0];
+  $("doneTitle").textContent = first ? `Thank you, ${first}! Your order is placed` : "Thank you! Your order is placed";
+  $("doneSub").textContent = paid
+    ? "Your payment was successful and your order is placed. Please wait for the confirmation — we are getting your order ready."
+    : "Your order is placed. Please wait for the confirmation — we will verify your payment and get your order ready.";
+  $("doneOid").innerHTML = `Your Order ID: <b>${esc(o.orderNumber)}</b>`;
+  $("doneTl").innerHTML = ["Order placed", "Processing", "Shipped", "Delivered"].map((l, i) => `<div class="${i === 0 ? "on" : ""}"><i>${i === 0 ? "✓" : i + 1}</i>${l}</div>`).join("");
+
   const statusRow = paid ? "<b style='color:#3E7A4A'>Paid</b>" : "<b style='color:#B07A1A'>Pending verification</b>";
-  const rows = [["Order ID", `<b>${esc(o.orderNumber)}</b>`], ["Items", o.items.map(i => `${esc(i.name)} × ${i.qty}`).join("<br>")], ["Total paid", `<b>${money(o.total)}</b>`], ["Payment", esc(o.paymentMethod)], ["Reference no.", esc(o.utr)], ["Payment status", statusRow], ["Deliver to", esc(o.address).replace(/\n/g, "<br>")]];
+  let est = "";
+  try { est = o.estimatedDeliveryAt && o.estimatedDeliveryAt.toDate ? o.estimatedDeliveryAt.toDate().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : ""; } catch {}
+  const rows = [
+    ["Order ID", `<b>${esc(o.orderNumber)}</b>`],
+    ["Items", o.items.map(i => `${esc(i.name)} × ${i.qty}`).join("<br>")],
+    ["Total", `<b>${money(o.total)}</b>`],
+    ["Payment", esc(o.paymentMethod)],
+    ["Payment status", statusRow],
+    ["Reference no.", esc(o.utr)],
+    est ? ["Estimated delivery", esc(est)] : null,
+    ["Deliver to", esc(o.address).replace(/\n/g, "<br>")],
+  ].filter(Boolean);
   $("doneBox").innerHTML = rows.map(([k, v]) => `<div class="k"><span>${k}</span><span style="text-align:right">${v}</span></div>`).join("");
-  $("doneSub").textContent = paid ? "Your payment was successful and your order is placed. Please wait for the confirmation — we will update you by email." : "Your order is placed. Please wait for the confirmation — we will verify your payment and update you by email.";
-  const msg = [`Hello Taneeraa, I have paid for my order.`, `Order ID: ${o.orderNumber}`, `Amount: ₹${o.total}` + (o.couponCode ? ` (coupon ${o.couponCode})` : ""), `Payment: ${o.paymentMethod} (${o.utr})`, `Items: ` + o.items.map(i => `${i.name} x${i.qty}`).join(", "), `Name: ${o.receiverName}`, `Mobile: ${o.customerPhone}`].join("\n");
+  $("doneMail").textContent = `We will email your order details to ${o.customerEmail}. You can track your order any time with your Order ID.`;
+  $("trackBtn").href = `index.html?track=${encodeURIComponent(o.orderNumber)}#track-order`;
+
+  // WhatsApp message to the shop owner with the full order details
+  const msg = [
+    `Hello Taneeraa 👋`,
+    `My order is placed. Please confirm it and share updates.`,
+    ``,
+    `Order ID: ${o.orderNumber}`,
+    `Items: ` + o.items.map(i => `${i.name} x${i.qty}`).join(", "),
+    `Amount: ₹${o.total}` + (o.couponCode ? ` (coupon ${o.couponCode})` : ""),
+    `Payment: ${o.paymentMethod} — ${paid ? "PAID" : "pending verification"} (Ref: ${o.utr})`,
+    `Name: ${o.receiverName}`,
+    `Mobile: ${o.customerPhone}`,
+    `Address: ${String(o.address).replace(/\n/g, ", ")}`,
+  ].join("\n");
   $("waBtn").href = `https://wa.me/${WHATSAPP}?text=` + encodeURIComponent(msg);
-  $("waBtn").hidden = paid; // the WhatsApp payment note is only needed for manual UPI payments
+
+  // remembered so the WhatsApp icon on the shop pages can start a chat about this order
+  try { localStorage.setItem("tan_last_order", JSON.stringify({ id: o.orderNumber, total: o.total })); } catch {}
   if (fromCart) localStorage.setItem("tan_cart", "{}");
   sessionStorage.removeItem("tan_coupon");
 }
