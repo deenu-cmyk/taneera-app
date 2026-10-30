@@ -444,7 +444,7 @@ function showDone(o) {
   $("waBtn").href = `https://wa.me/${WHATSAPP}?text=` + encodeURIComponent(msg);
 
   // remembered so the WhatsApp icon on the shop pages can start a chat about this order
-  try { localStorage.setItem("tan_last_order", JSON.stringify({ id: o.orderNumber, total: o.total })); } catch {}
+  try { localStorage.setItem("tan_last_order", JSON.stringify({ id: o.orderNumber, total: o.total })); } catch (e){}
   if (fromCart) localStorage.setItem("tan_cart", "{}");
   sessionStorage.removeItem("tan_coupon");
 }
