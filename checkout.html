@@ -185,9 +185,9 @@ import { auth, db, ADMIN_EMAIL } from "./firebase-config.js";
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import { collection, doc, getDoc, getDocs, addDoc, setDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-// Shipping defaults. The admin can change both in shipping-settings.html (saved in Firestore: settings/shipping)
-let SHIPPING_FEE = 100;            // standard shipping, in rupees
-let FREE_SHIPPING_ABOVE = 999;     // free shipping when the amount after discount is above this
+// Shipping defaults. The admin can change both in Admin Panel -> Settings (saved in Firestore: settings)
+let SHIPPING_FEE = 100;            // standard shipping, in rupees (0 = free shipping for everyone)
+let FREE_SHIPPING_ABOVE = 999;     // free shipping when the amount after discount is above this (0 = charge the fee on every order)
 const DELIVERY_DAYS = 5;
 const WHATSAPP = "919538162560";
 // Your Vercel backend (check the exact address in Vercel -> your project -> Overview -> Domains)
@@ -231,6 +231,7 @@ document.querySelectorAll('input[name="pay"]').forEach(r => r.addEventListener("
 // Looks through the settings documents for the shipping charge and the free-shipping limit.
 // A number whose name contains "free", "above", "min", "limit" or "threshold" is the free-shipping limit;
 // any other number whose name (or document name) contains "ship" or "deliver" is the shipping charge.
+// (api/_lib/shop.js uses exactly the same rules, so the website and the server always agree.)
 async function loadShipping() {
   try {
     const snap = await getDocs(collection(db, "settings"));
@@ -280,7 +281,7 @@ function totals() {
     discount = Math.round(el * coupon.discountPercentage / 100);
   }
   const after = Math.max(0, subtotal - discount);
-  const shipping = after > FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
+  const shipping = (SHIPPING_FEE <= 0 || (FREE_SHIPPING_ABOVE > 0 && after > FREE_SHIPPING_ABOVE)) ? 0 : SHIPPING_FEE;
   return { subtotal, discount, shipping, total: after + shipping };
 }
 function renderSummary() {
@@ -463,8 +464,9 @@ async function finish(f, method, ref, extra) {
   sendEmails(order);
 }
 
-// After the customer has paid in Razorpay: ask the backend to confirm the payment, then save the order.
-// If the backend cannot confirm it, the order is still saved (as "Pending Verification") so it is never lost.
+// After the customer has paid in Razorpay: ask the backend to confirm the payment AND save the order
+// (the server saves it with admin rights, so it never depends on browser permissions).
+// If the backend cannot confirm it, the browser still tries to save the order as "Pending Verification".
 async function confirmAndPlace(f) {
   const resp = paidResp;
   const t = totals();
@@ -475,8 +477,13 @@ async function confirmAndPlace(f) {
       ...resp,
       items: items.map(i => ({ id: i.p.id, qty: i.qty })),
       couponCode: coupon && t.discount ? coupon.code : undefined,
+      order: {
+        customerId: auth.currentUser ? auth.currentUser.uid : "",
+        customer: { email: f.email, phone: f.phone, fname: f.fname, lname: f.lname, address: f.address, apt: f.apt, landmark: f.landmark, city: f.city, state: f.state, pin: f.pin, alt: f.alt },
+      },
     });
     verified = !!r.verified;
+    if (r.order) { paidResp = null; showDone(r.order); sendEmails(r.order); return; }
   } catch (err) { console.error("Payment check failed:", err); }
   $("payBtn").textContent = "Saving your order…";
   try {
