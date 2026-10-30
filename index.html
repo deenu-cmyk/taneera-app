@@ -1214,7 +1214,7 @@ footer{background:var(--forest)}
      product photo, e.g. 'assets/categories/earrings.jpg'. If an image fails
      to load, the card falls back to a green gradient automatically.
   ================================================================= */
-  const CATEGORIES = [
+  const DEFAULT_CATEGORIES = [
     { name: 'Handmade Earring',               tag: 'Bestseller',  img: 'https://images.unsplash.com/photo-1620656798579-1984d9e87df7?w=700&q=80' },
     { name: 'Handmade Necklace',              tag: 'Handcrafted', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=700&q=80' },
     { name: 'Handpicked Earrings',            tag: 'Curated',     img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=700&q=80' },
@@ -1223,16 +1223,28 @@ footer{background:var(--forest)}
     { name: 'Anti Tarnish & Diamond Replica', tag: 'Long-lasting',img: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=700&q=80' },
   ];
 
-  document.getElementById('categoryGrid').innerHTML = CATEGORIES.map((c) => `
+  function renderCategories(list) {
+  document.getElementById('categoryGrid').innerHTML = list.map((c) => `
     <div class="cat-card" onclick="filterByCategory('${c.name.replace(/'/g, "\\'")}')">
       <img src="${c.img}" alt="${escapeHtml(c.name)}" loading="lazy" onerror="this.style.display='none'">
-      <span class="cat-tag">${escapeHtml(c.tag)}</span>
+      ${c.tag ? `<span class="cat-tag">${escapeHtml(c.tag)}</span>` : ''}
       <div class="cat-overlay">
         <h4>${escapeHtml(c.name)}</h4>
         <span>Shop now <svg class="ic" style="width:14px;height:14px"><use href="#i-arrow"/></svg></span>
       </div>
     </div>
   `).join('');
+  }
+
+  // Show the default six first, then switch to the live list the admin manages (Admin -> Categories)
+  renderCategories(DEFAULT_CATEGORIES);
+  onSnapshot(query(collection(db, 'categories'), orderBy('order')), (snapshot) => {
+    const list = snapshot.docs.map(d => d.data()).filter(c => c && c.name)
+      .map(c => ({ name: c.name, tag: c.tag || '', img: c.imageUrl || '' }));
+    if (list.length) renderCategories(list);
+  }, (err) => {
+    console.error('Could not load categories (showing defaults):', err);
+  });
 
   /* ============ PRODUCTS — live from Firestore (admin-managed) ============ */
   let PRODUCTS = [];
